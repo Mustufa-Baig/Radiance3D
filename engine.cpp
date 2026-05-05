@@ -17,6 +17,11 @@ struct EngineState {
     GLFWwindow* window = nullptr;
     std::unique_ptr<Shader> shader;
     std::unique_ptr<Scene> scene;
+    std::unique_ptr<Shader> shadow_shader;
+    unsigned int depthMapFBO;
+    unsigned int depthMap;
+    const unsigned int SHADOW_RES = 4096; // 4K shadows for Sponza!
+
 
     // Camera State
     Vector3 camera_pos = Vector3(0.0f, 0.0f, 5.0f);
@@ -70,6 +75,26 @@ bool init_window(int width, int height, const std::string& title) {
     state.scene = std::make_unique<Scene>();
     state.shader = std::make_unique<Shader>();
     state.last_time = std::chrono::high_resolution_clock::now();
+
+
+    state.shadow_shader = std::make_unique<Shader>(shadowVertexShaderSource, shadowFragmentShaderSource);
+    
+    glGenFramebuffers(1, &state.depthMapFBO);
+    glGenTextures(1, &state.depthMap);
+    glBindTexture(GL_TEXTURE_2D, state.depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, state.SHADOW_RES, state.SHADOW_RES, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, state.depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, state.depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     return true;
 }
@@ -228,16 +253,40 @@ void render_frame() {
         if (glfwGetKey(state.window, GLFW_KEY_Q) == GLFW_PRESS) state.camera_pos = state.camera_pos - (state.world_up * speed);
     }
 
-    // 4. Rendering
+    // --- PASS 1: RENDER SHADOW MAP ---
+    // The second-to-last parameter is now -500.0f instead of 1.0f!
+    Matrix4x4 lightProjection = Matrix4x4::ortho(-75.0f, 75.0f, -75.0f, 75.0f, -500.0f, 500.0f);
+    Matrix4x4 lightView = Matrix4x4::lookAt(state.sun_dir * -50.0f, Vector3(0,0,0), Vector3(0,1,0));
+    Matrix4x4 lightSpaceMatrix = lightProjection * lightView;
+
+    state.shadow_shader->use();
+    state.shadow_shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+    glViewport(0, 0, state.SHADOW_RES, state.SHADOW_RES);
+    glBindFramebuffer(GL_FRAMEBUFFER, state.depthMapFBO);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    state.scene->draw(*state.shadow_shader); 
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // --- PASS 2: RENDER MAIN SCENE ---
+    glViewport(0, 0, state.width, state.height);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     state.shader->use();
 
+    // Re-calculate the main camera matrices
     float aspect = state.height > 0 ? (float)state.width / (float)state.height : 1.0f;
     Matrix4x4 projection = Matrix4x4::perspective(45.0f * (3.14159265f / 180.0f), aspect, 0.1f, 100.0f);
     Matrix4x4 view = Matrix4x4::lookAt(state.camera_pos, state.camera_pos + state.camera_front, state.world_up);
 
+    // Bind the generated shadow map to Slot 4
+    glActiveTexture(GL_TEXTURE4);
+    glBindTexture(GL_TEXTURE_2D, state.depthMap);
+    state.shader->setInt("shadowMap", 4);
+    
+    // Pass the matrices and uniforms to the main shader
+    state.shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
     state.shader->setMat4("view", view);
     state.shader->setMat4("projection", projection);
     
@@ -245,6 +294,7 @@ void render_frame() {
     state.shader->setVec3("sunColor", state.sun_color.x, state.sun_color.y, state.sun_color.z);
     state.shader->setVec3("viewPos", state.camera_pos.x, state.camera_pos.y, state.camera_pos.z);
 
+    // Draw the scene with shadows applied
     state.scene->draw(*state.shader);
 
     glfwSwapBuffers(state.window);

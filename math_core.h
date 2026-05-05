@@ -147,4 +147,17 @@ struct Matrix4x4 {
         result.m[3][3] = 1.0f;
         return result;
     }
+
+    static Matrix4x4 ortho(float left, float right, float bottom, float top, float zNear, float zFar) {
+        Matrix4x4 result; 
+        for(int i=0; i<4; ++i) for(int j=0; j<4; ++j) result.m[i][j] = 0.0f; // Zero out
+        result.m[0][0] = 2.0f / (right - left);
+        result.m[1][1] = 2.0f / (top - bottom);
+        result.m[2][2] = -2.0f / (zFar - zNear);
+        result.m[3][0] = -(right + left) / (right - left);
+        result.m[3][1] = -(top + bottom) / (top - bottom);
+        result.m[3][2] = -(zFar + zNear) / (zFar - zNear);
+        result.m[3][3] = 1.0f;
+        return result;
+    }
 };

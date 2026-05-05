@@ -12,10 +12,12 @@ r3d.set_rotation(box, math.radians(0),0,0)
 r3d.set_material(box, 1.0, 1.0, 1.0, 0.0, 0.5) 
 
 # Map the PBR Textures
-r3d.set_albedo_texture(box, "plaster.jpg")
-r3d.set_roughness_texture(box, "plaster_roughness.jpg")
-#r3d.set_metallic_texture(box, "plaster_metallic.jpg") # If you have a metal object!
-r3d.set_normal_texture(box, "plaster_normal.jpg") # The magic bluish image!
+texture_name="tiles"
+
+r3d.set_albedo_texture(box, texture_name+".jpg")
+r3d.set_roughness_texture(box, texture_name+"_roughness.jpg")
+#r3d.set_metallic_texture(box, texture_name+"_metallic.jpg")
+r3d.set_normal_texture(box, texture_name+"_normal.jpg") 
 
 r3d.set_camera_position(0, 2, 0)
 r3d.camera_look_at(0, 2, 0)
@@ -28,6 +30,6 @@ start_time = time.time()
 while r3d.is_running():
     # Optional: Animate the sun moving across the sky!
     elapsed = time.time() - start_time
-    r3d.set_sun_direction(math.sin(elapsed * 0.5), -1.0, math.cos(elapsed * 0.5))
+    r3d.set_sun_direction(0.1*math.sin(elapsed * 0.15), -1.0, 0.1*math.cos(elapsed * 0.15))
 
     r3d.render_frame()

@@ -4,6 +4,23 @@
 #include <string>
 #include "math_core.h"
 
+const char* shadowVertexShaderSource = R"glsl(
+    #version 330 core
+    layout (location = 0) in vec3 aPos;
+    uniform mat4 lightSpaceMatrix;
+    uniform mat4 model;
+    void main() {
+        gl_Position = lightSpaceMatrix * model * vec4(aPos, 1.0);
+    }
+)glsl";
+
+const char* shadowFragmentShaderSource = R"glsl(
+    #version 330 core
+    void main() {
+        // We output nothing! OpenGL automatically records the depth.
+    }
+)glsl";
+
 // --- The GLSL Source Code ---
 const char* vertexShaderSource = R"glsl(
     #version 330 core
@@ -21,8 +38,14 @@ const char* vertexShaderSource = R"glsl(
     uniform mat4 view;
     uniform mat4 projection;
 
+    // Add these two lines:
+    uniform mat4 lightSpaceMatrix;
+    out vec4 FragPosLightSpace;
+
+
     void main() {
         FragPos = vec3(model * vec4(aPos, 1.0));
+        FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
         TexCoords = aTexCoords;
         
         mat3 normalMatrix = mat3(transpose(inverse(model)));
@@ -72,7 +95,13 @@ const char* fragmentShaderSource = R"glsl(
 
     uniform sampler2D normalMap;
     uniform int useNormalMap;
+    
+    uniform sampler2D shadowMap;
+    in vec4 FragPosLightSpace;
+
+
     in mat3 TBN; // Receive from vertex shader
+
 
     const float PI = 3.14159265359;
 
@@ -108,6 +137,33 @@ const char* fragmentShaderSource = R"glsl(
     // Fresnel-Schlick (Calculates base reflectivity at grazing angles)
     vec3 FresnelSchlick(float cosTheta, vec3 F0) {
         return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+    }
+
+    float ShadowCalculation(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir) {
+        vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+        projCoords = projCoords * 0.5 + 0.5; // Transform from [-1, 1] to [0, 1]
+        if(projCoords.z > 1.0) return 0.0;
+        
+        float currentDepth = projCoords.z;
+        // Bias prevents "shadow acne" (geometric self-shadowing artifacts)
+        float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.001);
+        
+        // Upgraded PCF (Soft Shadows)
+        float shadow = 0.0;
+        vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+        
+        // Increase the sample radius to blur the blockiness
+        int sampleRadius = 2; 
+        float samples = 0.0;
+        
+        for(int x = -sampleRadius; x <= sampleRadius; ++x) {
+            for(int y = -sampleRadius; y <= sampleRadius; ++y) {
+                float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+                shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+                samples += 1.0;
+            }    
+        }
+        return shadow / samples;
     }
 
     void main() {
@@ -172,7 +228,8 @@ const char* fragmentShaderSource = R"glsl(
         kD *= 1.0 - currentMetallic; 
 
         float NdotL = max(dot(N, L), 0.0);        
-        Lo += (kD * surfaceColor / PI + specular) * radiance * NdotL;
+        float shadow = ShadowCalculation(FragPosLightSpace, N, L);
+        Lo += (1.0 - shadow) * (kD * surfaceColor / PI + specular) * radiance * NdotL;
 
         // Ambient lighting (very simple for now)
         vec3 ambient = vec3(0.03) * surfaceColor * ao;
@@ -190,14 +247,14 @@ class Shader {
 public:
     unsigned int ID;
 
-    Shader() {
+    Shader(const char* vCode = vertexShaderSource, const char* fCode = fragmentShaderSource) {
         unsigned int vertex, fragment;
         int success;
         char infoLog[512];
 
         // 1. Compile Vertex Shader
         vertex = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertex, 1, &vertexShaderSource, NULL);
+        glShaderSource(vertex, 1, &vCode, NULL);
         glCompileShader(vertex);
         glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
         if (!success) {
