@@ -364,6 +364,7 @@ CMakeFiles/radiance3d.dir/engine.cpp.obj: C:/Users/Mustufa/Projects/Programming/
   C:/msys64/ucrt64/include/crtdefs.h \
   C:/msys64/ucrt64/include/ctype.h \
   C:/msys64/ucrt64/include/errno.h \
+  C:/msys64/ucrt64/include/float.h \
   C:/msys64/ucrt64/include/inttypes.h \
   C:/msys64/ucrt64/include/io.h \
   C:/msys64/ucrt64/include/limits.h \
@@ -397,12 +398,15 @@ CMakeFiles/radiance3d.dir/engine.cpp.obj: C:/Users/Mustufa/Projects/Programming/
   C:/msys64/ucrt64/include/vadefs.h \
   C:/msys64/ucrt64/include/wchar.h \
   C:/msys64/ucrt64/include/wctype.h \
+  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/float.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/limits.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/mm_malloc.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdarg.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stddef.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdint.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/syslimits.h \
+  C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/cgltf.h \
+  C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/gltf_loader.h \
   C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/math_core.h \
   C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/mesh.h \
   C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/obj_loader.h \
@@ -968,8 +972,6 @@ C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/enumobject.h:
 
 C:/msys64/ucrt64/include/c++/13.2.0/bits/list.tcc:
 
-C:/msys64/ucrt64/include/sysinfoapi.h:
-
 C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/exports.h:
 
 C:/msys64/ucrt64/include/_mingw_unicode.h:
@@ -1358,6 +1360,8 @@ C:/msys64/ucrt64/include/c++/13.2.0/bits/mask_array.h:
 
 C:/msys64/ucrt64/include/c++/13.2.0/bits/memoryfwd.h:
 
+C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/cgltf.h:
+
 C:/msys64/ucrt64/include/c++/13.2.0/bits/move.h:
 
 C:/msys64/ucrt64/include/c++/13.2.0/tuple:
@@ -1429,8 +1433,6 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/avx512bitalgintrin.h:
 C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_bvector.h:
 
 C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_deque.h:
-
-C:/msys64/ucrt64/include/systemtopologyapi.h:
 
 C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_iterator.h:
 
@@ -1576,6 +1578,8 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/bmiintrin.h:
 
 C:/msys64/ucrt64/include/c++/13.2.0/pstl/pstl_config.h:
 
+C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/float.h:
+
 C:/msys64/ucrt64/include/c++/13.2.0/ratio:
 
 C:/msys64/ucrt64/include/c++/13.2.0/stdexcept:
@@ -1654,6 +1658,8 @@ C:/msys64/ucrt64/include/corecrt_stdio_config.h:
 
 C:/msys64/ucrt64/include/ctype.h:
 
+C:/msys64/ucrt64/include/float.h:
+
 C:/msys64/ucrt64/include/inttypes.h:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/avx512vbmi2intrin.h:
@@ -1721,6 +1727,10 @@ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdarg.h:
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stddef.h:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdint.h:
+
+C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/gltf_loader.h:
+
+C:/msys64/ucrt64/include/realtimeapiset.h:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/avx512vnniintrin.h:
 
@@ -1796,8 +1806,6 @@ C:/msys64/ucrt64/include/psdk_inc/_wsa_errnos.h:
 
 C:/msys64/ucrt64/include/psdk_inc/_wsadata.h:
 
-C:/msys64/ucrt64/include/realtimeapiset.h:
-
 C:/msys64/ucrt64/include/reason.h:
 
 C:/msys64/ucrt64/include/rpc.h:
@@ -1815,6 +1823,10 @@ C:/msys64/ucrt64/include/specstrings.h:
 C:/msys64/ucrt64/include/stralign.h:
 
 C:/msys64/ucrt64/include/stringapiset.h:
+
+C:/msys64/ucrt64/include/sysinfoapi.h:
+
+C:/msys64/ucrt64/include/systemtopologyapi.h:
 
 C:/msys64/ucrt64/include/threadpoolapiset.h:
 

@@ -8,6 +8,9 @@
 #include "mesh.h"
 #include "shader.h"
 #include "obj_loader.h"  // Needed to load files directly from the Scene
+#include "obj_loader.h"
+#include "gltf_loader.h" // Add this at the top
+
 
 class Entity {
 public:
@@ -15,11 +18,16 @@ public:
     Vector3 position;
     Vector3 rotation;
     Vector3 scale_vec;
-    Vector3 color;
+    Vector3 color; // This will now act as our "Albedo"
+    
+    // --- NEW PBR PROPERTIES ---
+    float metallic;
+    float roughness;
+    float ao; // Ambient Occlusion (Pre-baked shadows, default to 1.0)
 
-    // Initialize with default values
     Entity(std::shared_ptr<Mesh> m) 
-        : mesh(m), position(0,0,0), rotation(0,0,0), scale_vec(1,1,1), color(0.8f, 0.8f, 0.8f) {}
+        : mesh(m), position(0,0,0), rotation(0,0,0), scale_vec(1,1,1), 
+          color(0.8f, 0.8f, 0.8f), metallic(0.0f), roughness(0.5f), ao(1.0f) {}
 
     Matrix4x4 get_model_matrix() const {
         Matrix4x4 t = Matrix4x4::translation(position);
@@ -27,11 +35,10 @@ public:
         Matrix4x4 ry = Matrix4x4::rotateY(rotation.y);
         Matrix4x4 rz = Matrix4x4::rotateZ(rotation.z);
         Matrix4x4 s = Matrix4x4::scale(scale_vec);
-        
-        // Use the native C++ overloaded '*' operator
         return t * rz * ry * rx * s;
     }
 };
+
 
 class Scene {
 private:
@@ -40,28 +47,32 @@ private:
 
     // Internal helper to handle the loading logic
     std::shared_ptr<Mesh> get_or_load_mesh(const std::string& filepath) {
-        // 1. If it exists in the vault, return the cached memory
         if (mesh_cache.find(filepath) != mesh_cache.end()) {
             return mesh_cache[filepath];
         }
 
-        // 2. If it's new, load it from the hard drive
         std::cout << "[Radiance3D] Caching new geometry to GPU: " << filepath << "\n";
-        std::vector<float> vertices = ObjLoader::load(filepath);
+        
+        std::vector<float> vertices;
+        
+        // Check the file extension to determine the loader!
+        if (filepath.find(".gltf") != std::string::npos || filepath.find(".glb") != std::string::npos) {
+            vertices = GltfLoader::load(filepath);
+        } else {
+            vertices = ObjLoader::load(filepath);
+        }
         
         if (vertices.empty()) {
-            std::cerr << "[Radiance3D] ERROR: Missing file -> " << filepath << "\n";
+            std::cerr << "[Radiance3D] ERROR: Missing or corrupt file -> " << filepath << "\n";
             return nullptr;
         }
 
         auto mesh = std::make_shared<Mesh>();
         mesh->load_vertices(vertices);
         
-        // 3. Save it to the vault and return it
         mesh_cache[filepath] = mesh;
         return mesh;
     }
-
 public:
     std::vector<std::shared_ptr<Entity>> entities;
 
@@ -78,7 +89,13 @@ public:
     void draw(Shader& shader) {
         for (auto& ent : entities) {
             shader.setMat4("model", ent->get_model_matrix());
-            shader.setVec3("objectColor", ent->color.x, ent->color.y, ent->color.z);
+            shader.setVec3("albedo", ent->color.x, ent->color.y, ent->color.z);
+            
+            // --- PASS PBR UNIFORMS ---
+            shader.setFloat("metallic", ent->metallic);
+            shader.setFloat("roughness", ent->roughness);
+            shader.setFloat("ao", ent->ao);
+            
             ent->mesh->draw();
         }
     }

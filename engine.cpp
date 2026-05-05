@@ -77,8 +77,24 @@ void set_position(std::shared_ptr<Entity> ent, float x, float y, float z) {
     if (ent) ent->position = Vector3(x, y, z);
 }
 
+void set_rotation(std::shared_ptr<Entity> ent, float x, float y, float z) {
+    if (ent) ent->rotation = Vector3(x, y, z);
+}
+
+void set_scale(std::shared_ptr<Entity> ent, float x, float y, float z) {
+    if (ent) ent->scale_vec = Vector3(x, y, z);
+}
+
 void set_camera_position(float x, float y, float z) {
     state.camera_pos = Vector3(x, y, z);
+}
+
+void set_material(std::shared_ptr<Entity> ent, float r, float g, float b, float metallic, float roughness) {
+    if (ent) {
+        ent->color = Vector3(r, g, b);
+        ent->metallic = metallic;
+        ent->roughness = roughness;
+    }
 }
 
 void camera_look_at(float x, float y, float z) {
@@ -205,4 +221,7 @@ PYBIND11_MODULE(radiance3d, m) {
     m.def("set_fps_camera", &set_fps_camera);
     m.def("get_key", &get_key);
     m.def("get_position", &get_position);
+    m.def("set_rotation", &set_rotation);
+    m.def("set_scale", &set_scale);
+    m.def("set_material", &set_material);
 }

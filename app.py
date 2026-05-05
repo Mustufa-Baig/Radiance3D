@@ -1,46 +1,33 @@
 import radiance3d as r3d
-import time
+import time, math
 
-# init engine
-r3d.init_window(800, 600, "Radiance3D - Game Logic")
+r3d.init_window(800, 600, "Radiance3D - Physically Based Rendering")
 
-# Disable the built-in flying camera so we can control the monkey instead
-r3d.set_fps_camera(False)
+# 1. Gold Monkey
+gold = r3d.load_model("monkey.glb")
+r3d.set_position(gold, -4, 0, 0)
+# RGB (Gold), Metallic (1.0 = Pure Metal), Roughness (0.2 = Slightly blurry mirror)
+r3d.set_material(gold, 1.0, 0.86, 0.57, 1.0, 0.3) 
 
-# scene
-scene = r3d.load_model("scene.obj")
-monkey = r3d.load_model("model.obj")
+# 2. Blue Plastic Monkey
+plastic = r3d.load_model("monkey.glb")
+r3d.set_position(plastic, 0, 0, 0)
+# RGB (Blue), Metallic (0.0 = Dielectric), Roughness (0.8 = Very rough, matte)
+r3d.set_material(plastic, 0.1, 0.3, 1.0, 0.0, 0.8)
 
-r3d.set_position(monkey, 2, 5, 0)
+# 3. Shiny Red Car Paint Monkey
+paint = r3d.load_model("monkey.glb")
+r3d.set_position(paint, 4, 0, 0)
+# RGB (Red), Metallic (0.5), Roughness (0.1 = Very smooth, sharp reflections)
+r3d.set_material(paint, 1.0, 0.1, 0.1, 0.5, 0.1)
 
-# camera
-r3d.set_camera_position(20, 5, 10)
-r3d.camera_look_at(2, 5, 0)
+r3d.set_rotation(gold,math.radians(90),0,0)
+r3d.set_rotation(plastic,math.radians(90),0,0)
+r3d.set_rotation(paint,math.radians(90),0,0)
 
-# Keycodes
-W, A, S, D = 87, 65, 83, 68
-speed = 10
 
-last_time = time.time()
+r3d.set_camera_position(0, 1, 5)
+r3d.camera_look_at(0, 0, 0)
 
-# main loop
 while r3d.is_running():
-    # 1. Delta Time (For smooth movement regardless of framerate)
-    current_time = time.time()
-    dt = current_time - last_time
-    last_time = current_time
-
-    # 2. Get current position
-    x, y, z = r3d.get_position(monkey)
-
-    # 3. Game Logic (WASD Movement)
-    if r3d.get_key(W): z += speed * dt
-    if r3d.get_key(S): z -= speed * dt
-    if r3d.get_key(A): x -= speed * dt
-    if r3d.get_key(D): x += speed * dt
-
-    # 4. Apply new position
-    r3d.set_position(monkey, x, y, z)
-
-    # 5. Render
     r3d.render_frame()

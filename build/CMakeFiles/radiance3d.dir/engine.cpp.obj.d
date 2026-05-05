@@ -399,4 +399,8 @@ CMakeFiles/radiance3d.dir/engine.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++io.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/fstream.tcc \
  C:/msys64/ucrt64/include/c++/13.2.0/sstream \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/sstream.tcc
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/sstream.tcc \
+ C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\gltf_loader.h \
+ C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\cgltf.h \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/float.h \
+ C:/msys64/ucrt64/include/float.h
