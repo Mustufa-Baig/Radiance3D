@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/cmake_install.cmake",
+		"C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/pybind11-build/cmake_install.cmake",
+		"C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/glfw-build/cmake_install.cmake",
+		"C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/glfw-build/src/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
