@@ -32,16 +32,21 @@ public:
         
         cgltf_accessor* pos_accessor = NULL;
         cgltf_accessor* norm_accessor = NULL;
+        cgltf_accessor* uv_accessor = NULL; 
+        cgltf_accessor* tangent_accessor = NULL; // NEW
 
-        // Find which buffer holds Positions and which holds Normals
         for (cgltf_size i = 0; i < primitive->attributes_count; ++i) {
             if (primitive->attributes[i].type == cgltf_attribute_type_position) {
                 pos_accessor = primitive->attributes[i].data;
             } else if (primitive->attributes[i].type == cgltf_attribute_type_normal) {
                 norm_accessor = primitive->attributes[i].data;
+            } else if (primitive->attributes[i].type == cgltf_attribute_type_texcoord) {
+                uv_accessor = primitive->attributes[i].data;
+            } else if (primitive->attributes[i].type == cgltf_attribute_type_tangent) {
+                tangent_accessor = primitive->attributes[i].data; // NEW
             }
         }
-        
+
         // Extract the data into our flat std::vector format
         if (pos_accessor) {
             // CHECK: Does this file use an Index Buffer?
@@ -65,6 +70,23 @@ public:
                     final_vertices.push_back(norm[0]);
                     final_vertices.push_back(norm[1]);
                     final_vertices.push_back(norm[2]);
+
+                    float uv[2] = {0.0f, 0.0f};
+                    if (uv_accessor) {
+                        cgltf_accessor_read_float(uv_accessor, vertex_index /* or 'i' for unindexed */, uv, 2);
+                    }
+                    final_vertices.push_back(uv[0]);
+                    final_vertices.push_back(uv[1]);
+
+                    // ... after pushing the 2 UV floats:
+                    float tangent[4] = {0.0f, 0.0f, 0.0f, 1.0f}; // Default flat tangent
+                    if (tangent_accessor) {
+                        cgltf_accessor_read_float(tangent_accessor, vertex_index /* or 'i' */, tangent, 4);
+                    }
+                    final_vertices.push_back(tangent[0]);
+                    final_vertices.push_back(tangent[1]);
+                    final_vertices.push_back(tangent[2]);
+                    final_vertices.push_back(tangent[3]);
                 }
             } else {
                 // FALLBACK: The file is already unrolled (rare, but happens)
@@ -82,6 +104,23 @@ public:
                     final_vertices.push_back(norm[0]);
                     final_vertices.push_back(norm[1]);
                     final_vertices.push_back(norm[2]);
+
+
+                    float uv[2] = {0.0f, 0.0f};
+                    if (uv_accessor) {
+                        cgltf_accessor_read_float(uv_accessor, i, uv, 2);
+                    }
+                    final_vertices.push_back(uv[0]);
+                    final_vertices.push_back(uv[1]);
+
+                    float tangent[4] = {0.0f, 0.0f, 0.0f, 1.0f}; // Default flat tangent
+                    if (tangent_accessor) {
+                        cgltf_accessor_read_float(tangent_accessor, i, tangent, 4);
+                    }
+                    final_vertices.push_back(tangent[0]);
+                    final_vertices.push_back(tangent[1]);
+                    final_vertices.push_back(tangent[2]);
+                    final_vertices.push_back(tangent[3]);
                 }
             }
         }

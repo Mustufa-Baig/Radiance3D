@@ -7,6 +7,7 @@
 
 #include "math_core.h"
 #include "shader.h"
+#include "texture.h"
 #include "scene.h"
 
 namespace py = pybind11;
@@ -33,6 +34,8 @@ struct EngineState {
 
     int width = 800, height = 600;
 } state;
+
+std::unordered_map<std::string, std::shared_ptr<Texture>> texture_cache;
 
 // --- CALLBACKS ---
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -71,6 +74,38 @@ bool init_window(int width, int height, const std::string& title) {
 std::shared_ptr<Entity> load_model(const std::string& filepath) {
     if (!state.scene) return nullptr;
     return state.scene->add_entity(filepath);
+}
+
+void set_albedo_texture(std::shared_ptr<Entity> ent, const std::string& filepath) {
+    if (!ent) return;
+    if (texture_cache.find(filepath) == texture_cache.end()) {
+        texture_cache[filepath] = std::make_shared<Texture>(filepath);
+    }
+    ent->albedoMap = texture_cache[filepath];
+}
+
+void set_metallic_texture(std::shared_ptr<Entity> ent, const std::string& filepath) {
+    if (!ent) return;
+    if (texture_cache.find(filepath) == texture_cache.end()) {
+        texture_cache[filepath] = std::make_shared<Texture>(filepath);
+    }
+    ent->metallicMap = texture_cache[filepath];
+}
+
+void set_roughness_texture(std::shared_ptr<Entity> ent, const std::string& filepath) {
+    if (!ent) return;
+    if (texture_cache.find(filepath) == texture_cache.end()) {
+        texture_cache[filepath] = std::make_shared<Texture>(filepath);
+    }
+    ent->roughnessMap = texture_cache[filepath];
+}
+
+void set_normal_texture(std::shared_ptr<Entity> ent, const std::string& filepath) {
+    if (!ent) return;
+    if (texture_cache.find(filepath) == texture_cache.end()) {
+        texture_cache[filepath] = std::make_shared<Texture>(filepath);
+    }
+    ent->normalMap = texture_cache[filepath];
 }
 
 void set_position(std::shared_ptr<Entity> ent, float x, float y, float z) {
@@ -224,4 +259,8 @@ PYBIND11_MODULE(radiance3d, m) {
     m.def("set_rotation", &set_rotation);
     m.def("set_scale", &set_scale);
     m.def("set_material", &set_material);
+    m.def("set_albedo_texture", &set_albedo_texture);
+    m.def("set_metallic_texture", &set_metallic_texture);
+    m.def("set_roughness_texture", &set_roughness_texture);
+    m.def("set_normal_texture", &set_normal_texture);
 }

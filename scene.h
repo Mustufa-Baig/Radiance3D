@@ -24,7 +24,11 @@ public:
     float metallic;
     float roughness;
     float ao; // Ambient Occlusion (Pre-baked shadows, default to 1.0)
-
+    std::shared_ptr<Texture> albedoMap;
+    std::shared_ptr<Texture> metallicMap;  // NEW
+    std::shared_ptr<Texture> roughnessMap; // NEW
+    std::shared_ptr<Texture> normalMap;
+    
     Entity(std::shared_ptr<Mesh> m) 
         : mesh(m), position(0,0,0), rotation(0,0,0), scale_vec(1,1,1), 
           color(0.8f, 0.8f, 0.8f), metallic(0.0f), roughness(0.5f), ao(1.0f) {}
@@ -88,6 +92,38 @@ public:
 
     void draw(Shader& shader) {
         for (auto& ent : entities) {
+            if (ent->albedoMap) {
+                ent->albedoMap->bind(0); 
+                shader.setInt("albedoMap", 0);
+                shader.setInt("useTexture", 1); 
+            } else {
+                shader.setInt("useTexture", 0); 
+            }
+
+            // Metallic is on slot 1
+            if (ent->metallicMap) {
+                ent->metallicMap->bind(1);
+                shader.setInt("metallicMap", 1);
+                shader.setInt("useMetallicMap", 1);
+            } else {
+                shader.setInt("useMetallicMap", 0);
+            }
+
+            // Roughness is on slot 2
+            if (ent->roughnessMap) {
+                ent->roughnessMap->bind(2);
+                shader.setInt("roughnessMap", 2);
+                shader.setInt("useRoughnessMap", 1);
+            } else {
+                shader.setInt("useRoughnessMap", 0);
+            }
+            if (ent->normalMap) {
+                ent->normalMap->bind(3);
+                shader.setInt("normalMap", 3);
+                shader.setInt("useNormalMap", 1);
+            } else {
+                shader.setInt("useNormalMap", 0);
+            }
             shader.setMat4("model", ent->get_model_matrix());
             shader.setVec3("albedo", ent->color.x, ent->color.y, ent->color.z);
             
@@ -95,7 +131,9 @@ public:
             shader.setFloat("metallic", ent->metallic);
             shader.setFloat("roughness", ent->roughness);
             shader.setFloat("ao", ent->ao);
+
             
+
             ent->mesh->draw();
         }
     }

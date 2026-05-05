@@ -9,21 +9,35 @@ const char* vertexShaderSource = R"glsl(
     #version 330 core
     layout (location = 0) in vec3 aPos;
     layout (location = 1) in vec3 aNormal;
-    
+    layout (location = 2) in vec2 aTexCoords;
+    layout (location = 3) in vec4 aTangent; // NEW
+
     out vec3 FragPos;
+    out vec2 TexCoords;
     out vec3 Normal;
-    
+    out mat3 TBN; // Pass the matrix to the fragment shader!
+
     uniform mat4 model;
     uniform mat4 view;
     uniform mat4 projection;
-    
+
     void main() {
-        // Calculate the actual position of the vertex in the 3D world
         FragPos = vec3(model * vec4(aPos, 1.0));
+        TexCoords = aTexCoords;
         
-        // Pass the normal to the fragment shader (adjusting for object rotation)
-        Normal = mat3(model) * aNormal;  
+        mat3 normalMatrix = mat3(transpose(inverse(model)));
+        Normal = normalMatrix * aNormal;  
+
+        // Calculate Tangent Space (TBN)
+        vec3 T = normalize(normalMatrix * aTangent.xyz);
+        vec3 N = normalize(Normal);
+        // Gram-Schmidt orthogonalization (re-orthogonalize T with respect to N)
+        T = normalize(T - dot(T, N) * N);
+        // Calculate Bitangent
+        vec3 B = cross(N, T) * aTangent.w;
         
+        TBN = mat3(T, B, N);
+
         gl_Position = projection * view * vec4(FragPos, 1.0);
     }
 )glsl";
@@ -45,6 +59,20 @@ const char* fragmentShaderSource = R"glsl(
     uniform vec3 lightPos;
     uniform vec3 lightColor;
     uniform vec3 viewPos;
+
+    // Add these near your other uniforms:
+    uniform sampler2D albedoMap;
+    uniform int useTexture;
+
+    uniform sampler2D metallicMap;
+    uniform int useMetallicMap;
+    
+    uniform sampler2D roughnessMap;
+    uniform int useRoughnessMap;
+
+    uniform sampler2D normalMap;
+    uniform int useNormalMap;
+    in mat3 TBN; // Receive from vertex shader
 
     const float PI = 3.14159265359;
 
@@ -83,12 +111,42 @@ const char* fragmentShaderSource = R"glsl(
     }
 
     void main() {
-        vec3 N = normalize(Normal);
+        // Fallback to geometric normal
+        vec3 N = normalize(Normal); 
+        
+        // If we have a normal map, override the Normal!
+        if (useNormalMap == 1) {
+            // Read the image (from 0 to 1)
+            N = texture(normalMap, TexCoords).rgb;
+            // Unpack it to standard vector space (-1 to 1)
+            N = N * 2.0 - 1.0;
+            // Bend it using the TBN matrix
+            N = normalize(TBN * N); 
+        }
+
         vec3 V = normalize(viewPos - FragPos);
 
-        // Calculate base reflectivity. (Metals tint reflections with their albedo, non-metals use a flat 0.04)
+        // 1. Get Base Color
+        vec3 surfaceColor = albedo;
+        if (useTexture == 1) {
+            surfaceColor = pow(texture(albedoMap, TexCoords).rgb, vec3(2.2));
+        }
+
+        // 2. Get Metallic Value
+        float currentMetallic = metallic;
+        if (useMetallicMap == 1) {
+            currentMetallic = texture(metallicMap, TexCoords).r; // Just grab the red channel
+        }
+
+        // 3. Get Roughness Value
+        float currentRoughness = roughness;
+        if (useRoughnessMap == 1) {
+            currentRoughness = texture(roughnessMap, TexCoords).r;
+        }
+
+        // Calculate base reflectivity
         vec3 F0 = vec3(0.04); 
-        F0 = mix(F0, albedo, metallic);
+        F0 = mix(F0, surfaceColor, currentMetallic);
 
         // Reflectance equation
         vec3 Lo = vec3(0.0);
@@ -103,8 +161,8 @@ const char* fragmentShaderSource = R"glsl(
         vec3 radiance = lightColor * attenuation * 100.0; // Multiplied by 100 for dramatic brightness
 
         // Cook-Torrance BRDF
-        float NDF = DistributionGGX(N, H, roughness);   
-        float G   = GeometrySmith(N, V, L, roughness);      
+        float NDF = DistributionGGX(N, H, currentRoughness);   
+        float G   = GeometrySmith(N, V, L, currentRoughness);      
         vec3 F    = FresnelSchlick(max(dot(H, V), 0.0), F0);       
         
         vec3 numerator    = NDF * G * F; 
@@ -114,14 +172,14 @@ const char* fragmentShaderSource = R"glsl(
         // Energy conservation: diffuse and specular cannot exceed 1.0
         vec3 kS = F;
         vec3 kD = vec3(1.0) - kS;
-        kD *= 1.0 - metallic; // Metals absorb all refracted light (no diffuse)
+        kD *= 1.0 - currentMetallic; // Metals absorb all refracted light (no diffuse)
 
         // Scale light by NdotL
         float NdotL = max(dot(N, L), 0.0);        
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL;
+        Lo += (kD * surfaceColor / PI + specular) * radiance * NdotL;
 
         // Ambient lighting (very simple for now)
-        vec3 ambient = vec3(0.03) * albedo * ao;
+        vec3 ambient = vec3(0.03) * surfaceColor * ao;
         vec3 color = ambient + Lo;
 
         // HDR Tonemapping and Gamma Correction
@@ -189,6 +247,11 @@ public:
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
     
+    void setInt(const std::string &name, int value) const {
+        glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    }
+
+
     // Utility to pass custom colors
     void setVec3(const std::string &name, float x, float y, float z) const {
         glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);

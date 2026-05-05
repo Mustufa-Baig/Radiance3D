@@ -390,6 +390,11 @@ CMakeFiles/radiance3d.dir/engine.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/iostream \
  C:/msys64/ucrt64/include/c++/13.2.0/istream \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/istream.tcc \
+ C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\texture.h \
+ C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\stb_image.h \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/emmintrin.h \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/xmmintrin.h \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/mmintrin.h \
  C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\scene.h \
  C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\mesh.h \
  C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\obj_loader.h \
