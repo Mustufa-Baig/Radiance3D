@@ -29,6 +29,9 @@ struct EngineState {
     bool first_mouse = true;
     bool fps_camera_enabled = true;
 
+    Vector3 sun_dir = Vector3(-0.2f, -1.0f, -0.3f); // Pointing slightly angled down
+    Vector3 sun_color = Vector3(5.0f, 5.0f, 4.5f);  // Bright, slightly warm light
+
     // Timing
     std::chrono::high_resolution_clock::time_point last_time;
 
@@ -166,6 +169,15 @@ void set_fps_camera(bool enabled) {
     }
 }
 
+void set_sun_direction(float x, float y, float z) {
+    state.sun_dir = Vector3(x, y, z);
+}
+
+void set_sun_color(float r, float g, float b) {
+    state.sun_color = Vector3(r, g, b);
+}
+
+
 void render_frame() {
     if (!state.window) return;
 
@@ -228,8 +240,9 @@ void render_frame() {
 
     state.shader->setMat4("view", view);
     state.shader->setMat4("projection", projection);
-    state.shader->setVec3("lightColor", 1.0f, 1.0f, 0.9f);
-    state.shader->setVec3("lightPos", 5.0f, 10.0f, 5.0f);
+    
+    state.shader->setVec3("sunDir", state.sun_dir.x, state.sun_dir.y, state.sun_dir.z);
+    state.shader->setVec3("sunColor", state.sun_color.x, state.sun_color.y, state.sun_color.z);
     state.shader->setVec3("viewPos", state.camera_pos.x, state.camera_pos.y, state.camera_pos.z);
 
     state.scene->draw(*state.shader);
@@ -263,4 +276,6 @@ PYBIND11_MODULE(radiance3d, m) {
     m.def("set_metallic_texture", &set_metallic_texture);
     m.def("set_roughness_texture", &set_roughness_texture);
     m.def("set_normal_texture", &set_normal_texture);
+    m.def("set_sun_direction", &set_sun_direction);
+    m.def("set_sun_color", &set_sun_color);
 }

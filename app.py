@@ -1,5 +1,5 @@
 import radiance3d as r3d
-import math
+import time, math
 
 r3d.init_window(800, 600, "Radiance3D - Full PBR Materials")
 r3d.set_fps_camera(True)
@@ -20,5 +20,14 @@ r3d.set_normal_texture(box, "plaster_normal.jpg") # The magic bluish image!
 r3d.set_camera_position(0, 2, 0)
 r3d.camera_look_at(0, 2, 0)
 
+r3d.set_sun_direction(-0.5, -1.0, 0.2)
+r3d.set_sun_color(8.0, 7.5, 7.0)
+
+start_time = time.time()
+
 while r3d.is_running():
+    # Optional: Animate the sun moving across the sky!
+    elapsed = time.time() - start_time
+    r3d.set_sun_direction(math.sin(elapsed * 0.5), -1.0, math.cos(elapsed * 0.5))
+
     r3d.render_frame()
