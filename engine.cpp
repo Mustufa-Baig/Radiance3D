@@ -12,6 +12,59 @@
 
 namespace py = pybind11;
 
+
+unsigned int cubeVAO = 0;
+unsigned int cubeVBO = 0;
+void renderCube() {
+    if (cubeVAO == 0) {
+        float vertices[] = {
+            // Back, Front, Left, Right, Bottom, Top faces (36 vertices total)
+            -1, -1, -1,   1,  1, -1,   1, -1, -1,   1,  1, -1,  -1, -1, -1,  -1,  1, -1,
+            -1, -1,  1,   1, -1,  1,   1,  1,  1,   1,  1,  1,  -1,  1,  1,  -1, -1,  1,
+            -1,  1,  1,  -1,  1, -1,  -1, -1, -1,  -1, -1, -1,  -1, -1,  1,  -1,  1,  1,
+             1,  1,  1,   1, -1, -1,   1,  1, -1,   1, -1, -1,   1,  1,  1,   1, -1,  1,
+            -1, -1, -1,   1, -1, -1,   1, -1,  1,   1, -1,  1,  -1, -1,  1,  -1, -1, -1,
+            -1,  1, -1,   1,  1,  1,   1,  1, -1,   1,  1,  1,  -1,  1, -1,  -1,  1,  1
+        };
+        glGenVertexArrays(1, &cubeVAO);
+        glGenBuffers(1, &cubeVBO);
+        glBindVertexArray(cubeVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    }
+    glBindVertexArray(cubeVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+}
+
+unsigned int quadVAO = 0;
+unsigned int quadVBO = 0;
+void renderQuad() {
+    if (quadVAO == 0) {
+        float quadVertices[] = {
+            // positions        // texture Coords
+            -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+             1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+             1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        };
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+        glBindVertexArray(quadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    }
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+}
+
 // --- GLOBAL ENGINE STATE ---
 struct EngineState {
     GLFWwindow* window = nullptr;
@@ -20,11 +73,14 @@ struct EngineState {
     std::unique_ptr<Shader> shadow_shader;
 
     std::unique_ptr<Shader> skybox_shader;
+    std::unique_ptr<Shader> irradiance_shader;
+    
     std::shared_ptr<HDRTexture> skybox_hdr;
     std::shared_ptr<Entity> skybox_cube; // We will use your existing glTF loader to load a basic cube!
 
     unsigned int depthMapFBO;
     unsigned int depthMap;
+    unsigned int irradianceMap;
     const unsigned int SHADOW_RES = 4096; // 4K shadows for Sponza!
 
 
@@ -119,12 +175,44 @@ void set_albedo_texture(std::shared_ptr<Entity> ent, const std::string& filepath
 }
 
 
-void load_skybox(const std::string& hdr_filepath, const std::string& cube_glb_filepath) {
+void load_skybox(const std::string& hdr_filepath) {
     state.skybox_hdr = std::make_shared<HDRTexture>(hdr_filepath);
-    state.skybox_cube = load_model(cube_glb_filepath);
-    state.scene->entities.pop_back();
-}
+    
+    // 1. Generate the empty floating-point map
+    glGenTextures(1, &state.irradianceMap);
+    glBindTexture(GL_TEXTURE_2D, state.irradianceMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 512, 256, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    // 2. Setup the FBO
+    unsigned int captureFBO;
+    glGenFramebuffers(1, &captureFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, state.irradianceMap, 0);
+
+    // 3. Bake the Image!
+    if (!state.irradiance_shader) {
+        state.irradiance_shader = std::make_unique<Shader>(irradianceVertexShader, irradianceFragmentShader);
+    }
+    
+    glViewport(0, 0, 512, 256); // Irradiance maps don't need high res, 512x256 is plenty
+    state.irradiance_shader->use();
+    state.skybox_hdr->bind(0);
+    state.irradiance_shader->setInt("environmentMap", 0);
+    
+    glClear(GL_COLOR_BUFFER_BIT);
+    renderQuad(); 
+    
+    // Cleanup
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDeleteFramebuffers(1, &captureFBO);
+    
+    // Reset viewport back to normal screen size for the game loop
+    glViewport(0, 0, state.width, state.height); 
+}
 
 void set_metallic_texture(std::shared_ptr<Entity> ent, const std::string& filepath) {
     if (!ent) return;
@@ -298,6 +386,10 @@ void render_frame() {
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, state.depthMap);
     state.shader->setInt("shadowMap", 4);
+
+    glActiveTexture(GL_TEXTURE5);
+    glBindTexture(GL_TEXTURE_2D, state.irradianceMap);
+    state.shader->setInt("irradianceMap", 5);
     
     // Pass the matrices and uniforms to the main shader
     state.shader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
@@ -325,7 +417,7 @@ void render_frame() {
         state.skybox_shader->setInt("equirectangularMap", 0);
         
         // Draw the cube geometry
-        state.skybox_cube->mesh->draw();
+        renderCube();
         
         glDepthFunc(GL_LESS); // Reset depth function to default
     }

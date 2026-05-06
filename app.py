@@ -4,7 +4,7 @@ import time, math
 r3d.init_window(800, 600, "Radiance3D - Full PBR Materials")
 r3d.set_fps_camera(True)
 
-r3d.load_skybox("studio.hdr", "cube.glb")
+r3d.load_skybox("studio.hdr")
 
 box = r3d.load_model("sponza.glb") 
 r3d.set_position(box, 0, 0, 0)
@@ -14,7 +14,7 @@ r3d.set_rotation(box, math.radians(0),0,0)
 r3d.set_material(box, 1.0, 1.0, 1.0, 0.0, 0.5) 
 
 # Map the PBR Textures
-texture_name="plaster"
+texture_name="tiles"
 
 r3d.set_albedo_texture(box, texture_name+".jpg")
 r3d.set_roughness_texture(box, texture_name+"_roughness.jpg")

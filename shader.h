@@ -5,6 +5,60 @@
 #include "math_core.h"
 
 
+const char* irradianceVertexShader = R"glsl(
+    #version 330 core
+    layout (location = 0) in vec3 aPos;
+    layout (location = 1) in vec2 aTexCoords;
+    out vec2 TexCoords;
+    void main() {
+        TexCoords = aTexCoords;
+        gl_Position = vec4(aPos, 1.0);
+    }
+)glsl";
+
+const char* irradianceFragmentShader = R"glsl(
+    #version 330 core
+    out vec4 FragColor;
+    in vec2 TexCoords;
+    uniform sampler2D environmentMap;
+
+    const float PI = 3.14159265359;
+
+    vec3 SphericalToCartesian(vec2 uv) {
+        float phi = uv.x * 2.0 * PI - PI;
+        float theta = uv.y * PI - (PI / 2.0);
+        return vec3(cos(theta)*cos(phi), sin(theta), cos(theta)*sin(phi));
+    }
+    vec2 CartesianToSpherical(vec3 v) {
+        vec2 uv = vec2(atan(v.z, v.x), asin(v.y));
+        uv *= vec2(0.1591, 0.3183);
+        return uv + 0.5;
+    }
+
+    void main() {
+        vec3 N = normalize(SphericalToCartesian(TexCoords));
+        vec3 irradiance = vec3(0.0);
+
+        vec3 up    = vec3(0.0, 1.0, 0.0);
+        vec3 right = normalize(cross(up, N));
+        up         = normalize(cross(N, right));
+
+        float sampleDelta = 0.1; // Smaller = higher quality bake, but slower
+        float nrSamples = 0.0; 
+        for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta) {
+            for(float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta) {
+                vec3 tangentSample = vec3(sin(theta) * cos(phi),  sin(theta) * sin(phi), cos(theta));
+                vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * N;
+
+                vec2 sampleUV = CartesianToSpherical(normalize(sampleVec));
+                irradiance += texture(environmentMap, sampleUV).rgb * cos(theta) * sin(theta);
+                nrSamples++;
+            }
+        }
+        FragColor = vec4(PI * irradiance * (1.0 / float(nrSamples)), 1.0);
+    }
+)glsl";
+
 const char* skyboxVertexShader = R"glsl(
     #version 330 core
     layout (location = 0) in vec3 aPos;
@@ -147,6 +201,7 @@ const char* fragmentShaderSource = R"glsl(
     uniform sampler2D shadowMap;
     in vec4 FragPosLightSpace;
 
+    uniform sampler2D irradianceMap;
 
     in mat3 TBN; // Receive from vertex shader
 
@@ -279,8 +334,21 @@ const char* fragmentShaderSource = R"glsl(
         float shadow = ShadowCalculation(FragPosLightSpace, N, L);
         Lo += (1.0 - shadow) * (kD * surfaceColor / PI + specular) * radiance * NdotL;
 
-        // Ambient lighting (very simple for now)
-        vec3 ambient = vec3(0.03) * surfaceColor * ao;
+        
+        // Extract the ambient energy based on the metalness/fresnel
+        vec3 kS_ambient = FresnelSchlick(max(dot(N, V), 0.0), F0);
+        vec3 kD_ambient = 1.0 - kS_ambient;
+        kD_ambient *= 1.0 - currentMetallic;
+
+        // Inverse trig to map our 3D Normal Vector to the 2D Irradiance Map!
+        vec2 irradianceUV = vec2(atan(N.z, N.x), asin(N.y));
+        irradianceUV *= vec2(0.1591, 0.3183);
+        irradianceUV += 0.5;
+        
+        vec3 irradiance = texture(irradianceMap, irradianceUV).rgb;
+        vec3 diffuse = irradiance * surfaceColor;
+        
+        vec3 ambient = (kD_ambient * diffuse) * ao;
         vec3 color = ambient + Lo;
 
         // HDR Tonemapping and Gamma Correction
