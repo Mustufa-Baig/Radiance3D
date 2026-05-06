@@ -76,7 +76,6 @@ struct EngineState {
     std::unique_ptr<Shader> irradiance_shader;
     
     std::shared_ptr<HDRTexture> skybox_hdr;
-    std::shared_ptr<Entity> skybox_cube; // We will use your existing glTF loader to load a basic cube!
 
     unsigned int depthMapFBO;
     unsigned int depthMap;
@@ -405,7 +404,7 @@ void render_frame() {
 
 
     // --- PASS 3: RENDER SKYBOX ---
-    if (state.skybox_hdr && state.skybox_cube) {
+    if (state.skybox_hdr) {
         // Change depth function so the skybox renders exactly ON the far clipping plane (1.0)
         glDepthFunc(GL_LEQUAL); 
         
