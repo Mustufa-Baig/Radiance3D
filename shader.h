@@ -4,6 +4,54 @@
 #include <string>
 #include "math_core.h"
 
+
+const char* skyboxVertexShader = R"glsl(
+    #version 330 core
+    layout (location = 0) in vec3 aPos;
+
+    out vec3 WorldPos;
+
+    uniform mat4 projection;
+    uniform mat4 view;
+
+    void main() {
+        WorldPos = aPos;
+        // Strip the translation from the view matrix so the skybox never moves when the player walks
+        mat4 rotView = mat4(mat3(view)); 
+        vec4 clipPos = projection * rotView * vec4(WorldPos, 1.0);
+        
+        // Force the Z depth to 1.0 (the maximum possible distance) so it always renders behind Sponza
+        gl_Position = clipPos.xyww; 
+    }
+)glsl";
+
+const char* skyboxFragmentShader = R"glsl(
+    #version 330 core
+    out vec4 FragColor;
+    in vec3 WorldPos;
+
+    uniform sampler2D equirectangularMap;
+
+    // Inverse trigonometry to wrap a flat 2D image around a 3D sphere
+    vec2 SampleSphericalMap(vec3 v) {
+        vec2 uv = vec2(atan(v.z, v.x), asin(v.y));
+        uv *= vec2(0.1591, 0.3183); 
+        uv += 0.5;
+        return uv;
+    }
+
+    void main() {       
+        vec2 uv = SampleSphericalMap(normalize(WorldPos));
+        vec3 color = texture(equirectangularMap, uv).rgb;
+        
+        // Tone mapping (squash HDR values back into 0.0 - 1.0 for the monitor)
+        color = color / (color + vec3(1.0));
+        color = pow(color, vec3(1.0/2.2)); 
+        
+        FragColor = vec4(color, 1.0);
+    }
+)glsl";
+
 const char* shadowVertexShaderSource = R"glsl(
     #version 330 core
     layout (location = 0) in vec3 aPos;
@@ -264,7 +312,7 @@ public:
 
         // 2. Compile Fragment Shader
         fragment = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment, 1, &fragmentShaderSource, NULL);
+        glShaderSource(fragment, 1, &fCode, NULL);
         glCompileShader(fragment);
         glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
         if (!success) {

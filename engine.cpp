@@ -18,6 +18,11 @@ struct EngineState {
     std::unique_ptr<Shader> shader;
     std::unique_ptr<Scene> scene;
     std::unique_ptr<Shader> shadow_shader;
+
+    std::unique_ptr<Shader> skybox_shader;
+    std::shared_ptr<HDRTexture> skybox_hdr;
+    std::shared_ptr<Entity> skybox_cube; // We will use your existing glTF loader to load a basic cube!
+
     unsigned int depthMapFBO;
     unsigned int depthMap;
     const unsigned int SHADOW_RES = 4096; // 4K shadows for Sponza!
@@ -78,6 +83,7 @@ bool init_window(int width, int height, const std::string& title) {
 
 
     state.shadow_shader = std::make_unique<Shader>(shadowVertexShaderSource, shadowFragmentShaderSource);
+    state.skybox_shader = std::make_unique<Shader>(skyboxVertexShader, skyboxFragmentShader);
     
     glGenFramebuffers(1, &state.depthMapFBO);
     glGenTextures(1, &state.depthMap);
@@ -111,6 +117,14 @@ void set_albedo_texture(std::shared_ptr<Entity> ent, const std::string& filepath
     }
     ent->albedoMap = texture_cache[filepath];
 }
+
+
+void load_skybox(const std::string& hdr_filepath, const std::string& cube_glb_filepath) {
+    state.skybox_hdr = std::make_shared<HDRTexture>(hdr_filepath);
+    state.skybox_cube = load_model(cube_glb_filepath);
+    state.scene->entities.pop_back();
+}
+
 
 void set_metallic_texture(std::shared_ptr<Entity> ent, const std::string& filepath) {
     if (!ent) return;
@@ -297,6 +311,25 @@ void render_frame() {
     // Draw the scene with shadows applied
     state.scene->draw(*state.shader);
 
+
+    // --- PASS 3: RENDER SKYBOX ---
+    if (state.skybox_hdr && state.skybox_cube) {
+        // Change depth function so the skybox renders exactly ON the far clipping plane (1.0)
+        glDepthFunc(GL_LEQUAL); 
+        
+        state.skybox_shader->use();
+        state.skybox_shader->setMat4("view", view);
+        state.skybox_shader->setMat4("projection", projection);
+        
+        state.skybox_hdr->bind(0);
+        state.skybox_shader->setInt("equirectangularMap", 0);
+        
+        // Draw the cube geometry
+        state.skybox_cube->mesh->draw();
+        
+        glDepthFunc(GL_LESS); // Reset depth function to default
+    }
+
     glfwSwapBuffers(state.window);
     glfwPollEvents();
 }
@@ -328,4 +361,5 @@ PYBIND11_MODULE(radiance3d, m) {
     m.def("set_normal_texture", &set_normal_texture);
     m.def("set_sun_direction", &set_sun_direction);
     m.def("set_sun_color", &set_sun_color);
+    m.def("load_skybox", &load_skybox);
 }
