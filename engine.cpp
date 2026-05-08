@@ -130,6 +130,11 @@ bool init_window(int width, int height, const std::string& title) {
 
     glEnable(GL_DEPTH_TEST);
 
+    // NEW: Enable Back-Face Culling!
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW); // Counter-Clockwise is the standard for "Front"
+
     state.width = width;
     state.height = height;
     state.scene = std::make_unique<Scene>();
@@ -416,7 +421,12 @@ void render_frame() {
         state.skybox_shader->setInt("equirectangularMap", 0);
         
         // Draw the cube geometry
-        renderCube();
+        glDisable(GL_CULL_FACE); // Disables culling so the inside of the skybox renders
+        renderCube(); 
+            
+        glDepthMask(GL_TRUE); 
+        glDepthFunc(GL_LESS); 
+        glEnable(GL_CULL_FACE); // NEW: Turn culling back on for the next frame!
         
         glDepthFunc(GL_LESS); // Reset depth function to default
     }
