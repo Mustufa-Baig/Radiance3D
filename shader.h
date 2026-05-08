@@ -174,6 +174,8 @@ const char* fragmentShaderSource = R"glsl(
     in vec3 FragPos;
     in vec3 Normal;
 
+    uniform int isPackedGLTF;
+
     // --- PBR Parameters ---
     uniform vec3 albedo;
     uniform float metallic;
@@ -291,16 +293,19 @@ const char* fragmentShaderSource = R"glsl(
             surfaceColor = pow(texture(albedoMap, TexCoords).rgb, vec3(2.2));
         }
 
-        // 2. Get Metallic Value
+        
         float currentMetallic = metallic;
-        if (useMetallicMap == 1) {
-            currentMetallic = texture(metallicMap, TexCoords).r; // Just grab the red channel
-        }
-
-        // 3. Get Roughness Value
         float currentRoughness = roughness;
-        if (useRoughnessMap == 1) {
-            currentRoughness = texture(roughnessMap, TexCoords).r;
+
+        if (isPackedGLTF == 1) {
+            // glTF Standard: Read Green for Roughness, Blue for Metallic
+            vec3 packedORM = texture(metallicMap, TexCoords).rgb;
+            currentRoughness = packedORM.g;
+            currentMetallic = packedORM.b;
+        } else {
+            // Your existing fallback for manual grayscale .jpg loading
+            if (useMetallicMap == 1) currentMetallic = texture(metallicMap, TexCoords).r;
+            if (useRoughnessMap == 1) currentRoughness = texture(roughnessMap, TexCoords).r;
         }
 
         // Calculate base reflectivity

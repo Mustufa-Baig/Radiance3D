@@ -16,7 +16,7 @@ public:
 
     // Takes a raw list of floats from Python (x,y,z, x,y,z...)
     void load_vertices(const std::vector<float>& vertices) {
-        vertexCount = vertices.size() / 6; // Now 6 floats per vertex!
+        vertexCount = vertices.size() / 12; // Now 6 floats per vertex!
 
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);

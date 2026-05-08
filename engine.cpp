@@ -170,7 +170,7 @@ void set_albedo_texture(std::shared_ptr<Entity> ent, const std::string& filepath
     if (texture_cache.find(filepath) == texture_cache.end()) {
         texture_cache[filepath] = std::make_shared<Texture>(filepath);
     }
-    ent->albedoMap = texture_cache[filepath];
+    for(auto& sub : ent->submeshes) { sub.albedoMap = texture_cache[filepath]; }
 }
 
 
@@ -218,7 +218,7 @@ void set_metallic_texture(std::shared_ptr<Entity> ent, const std::string& filepa
     if (texture_cache.find(filepath) == texture_cache.end()) {
         texture_cache[filepath] = std::make_shared<Texture>(filepath);
     }
-    ent->metallicMap = texture_cache[filepath];
+    for(auto& sub : ent->submeshes) { sub.metallicMap = texture_cache[filepath]; }
 }
 
 void set_roughness_texture(std::shared_ptr<Entity> ent, const std::string& filepath) {
@@ -226,7 +226,7 @@ void set_roughness_texture(std::shared_ptr<Entity> ent, const std::string& filep
     if (texture_cache.find(filepath) == texture_cache.end()) {
         texture_cache[filepath] = std::make_shared<Texture>(filepath);
     }
-    ent->roughnessMap = texture_cache[filepath];
+    for(auto& sub : ent->submeshes) { sub.roughnessMap = texture_cache[filepath]; }
 }
 
 void set_normal_texture(std::shared_ptr<Entity> ent, const std::string& filepath) {
@@ -234,7 +234,7 @@ void set_normal_texture(std::shared_ptr<Entity> ent, const std::string& filepath
     if (texture_cache.find(filepath) == texture_cache.end()) {
         texture_cache[filepath] = std::make_shared<Texture>(filepath);
     }
-    ent->normalMap = texture_cache[filepath];
+    for(auto& sub : ent->submeshes) { sub.normalMap = texture_cache[filepath]; }
 }
 
 void set_position(std::shared_ptr<Entity> ent, float x, float y, float z) {

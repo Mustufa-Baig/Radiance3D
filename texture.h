@@ -41,41 +41,70 @@ public:
         glBindTexture(GL_TEXTURE_2D, ID);
     }
 };
-
 class Texture {
 public:
     unsigned int ID;
 
+    // --- CONSTRUCTOR 1: The Original Filepath Loader ---
+    // (Keeps your C++ bindings happy and allows manual loading if you ever need it)
     Texture(const std::string& filepath) {
-        glGenTextures(1, &ID);
-        glBindTexture(GL_TEXTURE_2D, ID);
-
-        // Wrapping parameters
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        // Filtering parameters (Linear interpolation for smooth textures)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        // OpenGL expects the 0.0 coordinate on the Y-axis to be at the bottom, images usually have it at the top.
         stbi_set_flip_vertically_on_load(true); 
 
         int width, height, nrChannels;
         unsigned char *data = stbi_load(filepath.c_str(), &width, &height, &nrChannels, 0);
         
         if (data) {
-            GLenum format;
+            GLenum format = GL_RGB;
             if (nrChannels == 1) format = GL_RED;
-            else if (nrChannels == 3) format = GL_RGB;
             else if (nrChannels == 4) format = GL_RGBA;
 
+            glGenTextures(1, &ID);
+            glBindTexture(GL_TEXTURE_2D, ID);
+            
             glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
             glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
+            
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            
+            stbi_image_free(data);
         } else {
             std::cerr << "[Radiance3D] ERROR: Failed to load texture -> " << filepath << "\n";
         }
-        stbi_image_free(data);
+    }
+
+    // --- CONSTRUCTOR 2: The New glTF Memory Loader ---
+    // (Used by GltfLoader to extract embedded binary images)
+    Texture(const unsigned char* buffer, int len) {
+        stbi_set_flip_vertically_on_load(false); // glTF is usually pre-flipped
+        
+        int width, height, nrChannels;
+        unsigned char *data = stbi_load_from_memory(buffer, len, &width, &height, &nrChannels, 0);
+        
+        if (data) {
+            GLenum format = GL_RGB;
+            if (nrChannels == 1) format = GL_RED;
+            else if (nrChannels == 4) format = GL_RGBA;
+
+            glGenTextures(1, &ID);
+            glBindTexture(GL_TEXTURE_2D, ID);
+            
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+            
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            
+            stbi_image_free(data);
+        } else {
+            std::cerr << "[Radiance3D] ERROR: Failed to decode embedded glTF texture!\n";
+        }
     }
 
     void bind(unsigned int slot = 0) const {
