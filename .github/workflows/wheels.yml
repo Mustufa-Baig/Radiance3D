@@ -20,13 +20,12 @@ jobs:
           submodules: recursive # Ensures pybind11 and glfw are pulled
 
       - name: Build Wheels (cibuildwheel)
-        uses: pypa/cibuildwheel@v2.22.0
+        uses: pypa/cibuildwheel@v3.4.1
         env:
           # Skip PyPy and severely outdated Python versions to save build time
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_BEFORE_ALL_LINUX: "dnf install -y libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel"
           CIBW_BUILD: "cp314-*"
-          CIBW_PRERELEASE_PYTHONS: "1"
           CIBW_SKIP: "pp* cp36-* cp37-* *-musllinux*"
           # Force the builder to only compile modern 64-bit architectures
           CIBW_ARCHS: "auto64"
