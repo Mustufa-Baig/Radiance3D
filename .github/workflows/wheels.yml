@@ -28,6 +28,8 @@ jobs:
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_BEFORE_ALL_LINUX: "dnf install -y libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel"
           CIBW_SKIP: "pp* cp36-* cp37-*" 
+          # Force the builder to only compile modern 64-bit architectures
+          CIBW_ARCHS: "auto64"
           
           # Force cibuildwheel to use modern C++ standards
           CIBW_ENVIRONMENT: CXXFLAGS="-std=c++17"
