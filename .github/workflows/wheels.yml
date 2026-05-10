@@ -1,9 +1,7 @@
 name: Build Engine Wheels
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
+  workflow_dispatch:
     branches: [ main ]
 
 jobs:
@@ -22,7 +20,7 @@ jobs:
           submodules: recursive # Ensures pybind11 and glfw are pulled
 
       - name: Build Wheels (cibuildwheel)
-        uses: pypa/cibuildwheel@v2.16.5
+        uses: pypa/cibuildwheel@v2.22.0
         env:
           # Skip PyPy and severely outdated Python versions to save build time
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
