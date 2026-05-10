@@ -12,44 +12,32 @@ CMakeFiles/radiance3d.dir/engine.cpp.obj: \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stddef.h \
  C:/msys64/ucrt64/include/stddef.h \
  C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/glfw-src/include/GLFW/glfw3.h \
- C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/pybind11-src/include/pybind11/pybind11.h \
- C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/pybind11-src/include/pybind11/detail/class.h \
- C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/pybind11-src/include/pybind11/attr.h \
- C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/pybind11-src/include/pybind11/detail/common.h \
- C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/Python.h \
- C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/patchlevel.h \
- C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/pyconfig.h \
- C:/msys64/ucrt64/include/io.h C:/msys64/ucrt64/include/string.h \
- C:/msys64/ucrt64/include/sec_api/string_s.h \
- C:/msys64/ucrt64/include/_mingw_off_t.h C:/msys64/ucrt64/include/stdio.h \
- C:/msys64/ucrt64/include/corecrt_stdio_config.h \
- C:/msys64/ucrt64/include/swprintf.inl \
- C:/msys64/ucrt64/include/sec_api/stdio_s.h \
- C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/pymacconfig.h \
- C:/msys64/ucrt64/include/assert.h \
- C:/msys64/ucrt64/include/c++/13.2.0/stdlib.h \
- C:/msys64/ucrt64/include/c++/13.2.0/cstdlib \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/btBulletDynamicsCommon.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/btBulletCollisionCommon.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionWorld.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btVector3.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btScalar.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/math.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/cmath \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/requires_hosted.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++config.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/os_defines.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/cpu_defines.h \
  C:/msys64/ucrt64/include/c++/13.2.0/pstl/pstl_config.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/cpp_type_traits.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/ext/type_traits.h \
+ C:/msys64/ucrt64/include/math.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/std_abs.h \
  C:/msys64/ucrt64/include/stdlib.h \
  C:/msys64/ucrt64/include/corecrt_wstdlib.h \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/limits.h \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/syslimits.h \
  C:/msys64/ucrt64/include/limits.h \
  C:/msys64/ucrt64/include/sec_api/stdlib_s.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/stdlib.h \
  C:/msys64/ucrt64/include/malloc.h \
  C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/mm_malloc.h \
  C:/msys64/ucrt64/include/errno.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/std_abs.h \
- C:/msys64/ucrt64/include/inttypes.h \
- C:/msys64/ucrt64/include/c++/13.2.0/math.h \
- C:/msys64/ucrt64/include/c++/13.2.0/cmath \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/requires_hosted.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/cpp_type_traits.h \
- C:/msys64/ucrt64/include/c++/13.2.0/ext/type_traits.h \
- C:/msys64/ucrt64/include/math.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/specfun.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_algobase.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/functexcept.h \
@@ -81,13 +69,204 @@ CMakeFiles/radiance3d.dir/engine.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/tr1/poly_hermite.tcc \
  C:/msys64/ucrt64/include/c++/13.2.0/tr1/poly_laguerre.tcc \
  C:/msys64/ucrt64/include/c++/13.2.0/tr1/riemann_zeta.tcc \
- C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdarg.h \
- C:/msys64/ucrt64/include/stdarg.h \
- C:/msys64/ucrt64/include/_mingw_stdarg.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/cstdlib \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/float.h \
+ C:/msys64/ucrt64/include/float.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btMinMax.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btAlignedAllocator.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btTransform.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btMatrix3x3.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btVector3.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btQuaternion.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btQuadWord.h \
+ C:/msys64/ucrt64/include/stdio.h \
+ C:/msys64/ucrt64/include/corecrt_stdio_config.h \
+ C:/msys64/ucrt64/include/_mingw_off_t.h \
+ C:/msys64/ucrt64/include/swprintf.inl \
+ C:/msys64/ucrt64/include/sec_api/stdio_s.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionObject.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btMotionState.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btTransform.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btAlignedAllocator.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btAlignedObjectArray.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/new \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/exception.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btDispatcher.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btScalar.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/NarrowPhaseCollision/btPersistentManifold.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/NarrowPhaseCollision/btManifoldPoint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btTransformUtil.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btManifoldResult.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/NarrowPhaseCollision/btDiscreteCollisionDetectorInterface.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionObjectWrapper.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionObject.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionCreateFunc.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btBroadphaseInterface.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btBroadphaseProxy.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btOverlappingPairCallback.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionObject.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btBoxShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btPolyhedralConvexShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btMatrix3x3.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btConvexInternalShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btConvexShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btCollisionShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btCollisionMargin.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btAabbUtil2.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btMinMax.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btSphereShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btCapsuleShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btCylinderShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btBoxShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btConeShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btStaticPlaneShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btConcaveShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btTriangleCallback.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btConvexHullShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btTriangleMesh.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btStridingMeshInterface.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btTriangleMeshShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btOptimizedBvh.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btQuantizedBvh.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btTriangleInfoMap.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btHashMap.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/string \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/stringfwd.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/memoryfwd.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/char_traits.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/postypes.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/cwchar \
  C:/msys64/ucrt64/include/wchar.h \
  C:/msys64/ucrt64/include/_mingw_stat64.h \
  C:/msys64/ucrt64/include/sec_api/wchar_s.h \
- C:/msys64/ucrt64/include/sys/types.h C:/msys64/ucrt64/include/ctype.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/allocator.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++allocator.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/new_allocator.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/localefwd.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++locale.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/clocale \
+ C:/msys64/ucrt64/include/locale.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/iosfwd \
+ C:/msys64/ucrt64/include/c++/13.2.0/cctype \
+ C:/msys64/ucrt64/include/ctype.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/ostream_insert.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/cxxabi_forced.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_function.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/backward/binders.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/refwrap.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/invoke.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/range_access.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/initializer_list \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/basic_string.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/ext/alloc_traits.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/alloc_traits.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_construct.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/string_view \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/functional_hash.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/hash_bytes.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/string_view.tcc \
+ C:/msys64/ucrt64/include/c++/13.2.0/ext/string_conversions.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/cstdio \
+ C:/msys64/ucrt64/include/c++/13.2.0/cerrno \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/charconv.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/basic_string.tcc \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/memory_resource.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/cstddef \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/uses_allocator.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/bits/uses_allocator_args.h \
+ C:/msys64/ucrt64/include/c++/13.2.0/tuple \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btAlignedObjectArray.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btSerializer.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btHashMap.h \
+ C:/msys64/ucrt64/include/memory.h C:/msys64/ucrt64/include/string.h \
+ C:/msys64/ucrt64/include/sec_api/string_s.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btScaledBvhTriangleMeshShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btTriangleMeshShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btTriangleIndexVertexArray.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btCompoundShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btTetrahedronShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btEmptyShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btMultiSphereShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btUniformScalingShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btActivatingCollisionAlgorithm.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btCollisionAlgorithm.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionCreateFunc.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionConfiguration.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionDispatcher.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btSimpleBroadphase.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btOverlappingPairCache.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btAxisSweep3.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btDbvt.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btAxisSweep3Internal.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/BroadphaseCollision/btDbvtBroadphase.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btQuaternion.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btTransform.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btDefaultMotionState.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btMotionState.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btQuickprof.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btIDebugDraw.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btSerializer.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Dynamics/btDynamicsWorld.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionDispatch/btCollisionWorld.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btContactSolverInfo.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/LinearMath/btThreads.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Dynamics/btSimpleDynamicsWorld.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Dynamics/btRigidBody.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btPoint2PointConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btJacobianEntry.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btTypedConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btSolverConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btSolverBody.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Dynamics/btRigidBody.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btHingeConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btConeTwistConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btSliderConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btGeneric6DofSpringConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btUniversalConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btHinge2Constraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btGeneric6DofSpring2Constraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btGearConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btTypedConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btFixedConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btSolverBody.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btSolverConstraint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/NarrowPhaseCollision/btManifoldPoint.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/ConstraintSolver/btConstraintSolver.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Vehicle/btRaycastVehicle.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Vehicle/btVehicleRaycaster.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Vehicle/btWheelInfo.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Dynamics/btActionInterface.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletDynamics/Dynamics/btRigidBody.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btShapeHull.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/bullet-src/src/BulletCollision/CollisionShapes/btConvexShape.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/pybind11-src/include/pybind11/pybind11.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/pybind11-src/include/pybind11/detail/class.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/pybind11-src/include/pybind11/attr.h \
+ C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/build/_deps/pybind11-src/include/pybind11/detail/common.h \
+ C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/Python.h \
+ C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/patchlevel.h \
+ C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/pyconfig.h \
+ C:/msys64/ucrt64/include/io.h \
+ C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/pymacconfig.h \
+ C:/msys64/ucrt64/include/assert.h C:/msys64/ucrt64/include/inttypes.h \
+ C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/stdarg.h \
+ C:/msys64/ucrt64/include/stdarg.h \
+ C:/msys64/ucrt64/include/_mingw_stdarg.h \
+ C:/msys64/ucrt64/include/sys/types.h \
  C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/pyport.h \
  C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/exports.h \
  C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/pymacro.h \
@@ -209,51 +388,25 @@ CMakeFiles/radiance3d.dir/engine.cpp.obj: \
  C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/frameobject.h \
  C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/cpython/frameobject.h \
  C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/Include/pythread.h \
- C:/msys64/ucrt64/include/c++/13.2.0/cstddef \
  C:/msys64/ucrt64/include/c++/13.2.0/cstring \
  C:/msys64/ucrt64/include/c++/13.2.0/exception \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/exception.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/exception_ptr.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/cxxabi_init_exception.h \
  C:/msys64/ucrt64/include/c++/13.2.0/typeinfo \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/hash_bytes.h \
- C:/msys64/ucrt64/include/c++/13.2.0/new \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/nested_exception.h \
  C:/msys64/ucrt64/include/c++/13.2.0/forward_list \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/forward_list.h \
- C:/msys64/ucrt64/include/c++/13.2.0/initializer_list \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_function.h \
- C:/msys64/ucrt64/include/c++/13.2.0/backward/binders.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/allocator.h \
- C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++allocator.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/new_allocator.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/memoryfwd.h \
- C:/msys64/ucrt64/include/c++/13.2.0/ext/alloc_traits.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/alloc_traits.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_construct.h \
  C:/msys64/ucrt64/include/c++/13.2.0/ext/aligned_buffer.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/range_access.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/forward_list.tcc \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/memory_resource.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/uses_allocator.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/uses_allocator_args.h \
- C:/msys64/ucrt64/include/c++/13.2.0/tuple \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/invoke.h \
  C:/msys64/ucrt64/include/c++/13.2.0/memory \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_tempbuf.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_uninitialized.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/stl_raw_storage_iter.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/align.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/unique_ptr.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/functional_hash.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/shared_ptr.h \
- C:/msys64/ucrt64/include/c++/13.2.0/iosfwd \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/stringfwd.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/postypes.h \
- C:/msys64/ucrt64/include/c++/13.2.0/cwchar \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/shared_ptr_base.h \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/allocated_ptr.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/refwrap.h \
  C:/msys64/ucrt64/include/c++/13.2.0/ext/atomicity.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/gthr.h \
  C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/gthr-default.h \
@@ -276,23 +429,6 @@ CMakeFiles/radiance3d.dir/engine.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/pstl/glue_memory_defs.h \
  C:/msys64/ucrt64/include/c++/13.2.0/pstl/execution_defs.h \
  C:/msys64/ucrt64/include/c++/13.2.0/stdexcept \
- C:/msys64/ucrt64/include/c++/13.2.0/string \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/char_traits.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/localefwd.h \
- C:/msys64/ucrt64/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++locale.h \
- C:/msys64/ucrt64/include/c++/13.2.0/clocale \
- C:/msys64/ucrt64/include/locale.h \
- C:/msys64/ucrt64/include/c++/13.2.0/cctype \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/ostream_insert.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/cxxabi_forced.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/basic_string.h \
- C:/msys64/ucrt64/include/c++/13.2.0/string_view \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/string_view.tcc \
- C:/msys64/ucrt64/include/c++/13.2.0/ext/string_conversions.h \
- C:/msys64/ucrt64/include/c++/13.2.0/cstdio \
- C:/msys64/ucrt64/include/c++/13.2.0/cerrno \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/charconv.h \
- C:/msys64/ucrt64/include/c++/13.2.0/bits/basic_string.tcc \
  C:/msys64/ucrt64/include/c++/13.2.0/typeindex \
  C:/msys64/ucrt64/include/c++/13.2.0/unordered_map \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/unordered_map.h \
@@ -406,6 +542,4 @@ CMakeFiles/radiance3d.dir/engine.cpp.obj: \
  C:/msys64/ucrt64/include/c++/13.2.0/sstream \
  C:/msys64/ucrt64/include/c++/13.2.0/bits/sstream.tcc \
  C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\gltf_loader.h \
- C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\cgltf.h \
- C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/13.2.0/include/float.h \
- C:/msys64/ucrt64/include/float.h
+ C:\Users\Mustufa\Projects\Programming\game_engine\Radiance3D\cgltf.h

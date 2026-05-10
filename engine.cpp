@@ -1,5 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <btBulletDynamicsCommon.h>
+#include <btBulletDynamicsCommon.h>
+#include <BulletCollision/CollisionShapes/btShapeHull.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <memory>
@@ -65,6 +68,152 @@ void renderQuad() {
     glBindVertexArray(0);
 }
 
+
+class PhysicsCollider {
+public:
+    std::vector<btVector3> points;
+    btCollisionShape* shape = nullptr;
+    btRigidBody* body = nullptr;
+    float mass = 0.0f;
+
+    // 1. Extract raw positions from the glTF file
+    PhysicsCollider(const std::string& filepath) {
+        std::cout << "[Radiance3D] Extracting Physics Hull: " << filepath << "\n";
+        for (auto& data : GltfLoader::load(filepath)) {
+            // Skip 12 floats at a time to grab ONLY the Position (x, y, z)
+            for (size_t i = 0; i < data.vertices.size(); i += 12) {
+                points.push_back(btVector3(data.vertices[i], data.vertices[i+1], data.vertices[i+2]));
+            }
+        }
+
+        // --- VERTEX DUMP DEBUGGER ---
+        std::cout << "[Physics Debug] Mesh: " << filepath << "\n";
+        std::cout << "Total extracted points: " << points.size() << "\n";
+        for (int i = 0; i < std::min((int)points.size(), 8); ++i) {
+            std::cout << "  Vertex " << i << ": [ " 
+                      << points[i].x() << ", " 
+                      << points[i].y() << ", " 
+                      << points[i].z() << " ]\n";
+        }
+        std::cout << "--------------------------------\n";
+    }
+    void set_mass(float new_mass, btDiscreteDynamicsWorld* world) {
+        if (!body || !shape || !world) return;
+        
+        // 1. Remove it from the simulation temporarily so the solver doesn't freak out
+        world->removeRigidBody(body);
+
+        this->mass = new_mass;
+        
+        // 2. Recalculate how hard this shape is to rotate based on the new weight
+        btVector3 inertia(0, 0, 0);
+        if (mass > 0.0f) {
+            shape->calculateLocalInertia(mass, inertia);
+        }
+
+        // 3. Apply the new physics properties
+        body->setMassProps(mass, inertia);
+        body->updateInertiaTensor();
+
+        // 4. Tell Bullet if this object just became Static (0 mass) or Dynamic (>0 mass)
+        if (mass == 0.0f) {
+            body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
+        } else {
+            body->setCollisionFlags(body->getCollisionFlags() & ~btCollisionObject::CF_STATIC_OBJECT);
+        }
+
+        // 5. Force the object to "wake up" in case it went to sleep while sitting still
+        body->activate(true);
+
+        // 6. Inject it back into the active world
+        // Helps the cube completely freeze once it settles flat
+        body->setSleepingThresholds(0.05f, 0.05f);
+        world->addRigidBody(body);
+    }
+
+    // 2. Build the shape based on the type
+    void set_physics_type(const std::string& type, btDiscreteDynamicsWorld* world) {
+        if (type == "Convex Hull") {
+            // 1. Build the temporary hull
+            btConvexHullShape* tempHull = new btConvexHullShape();
+            for (const auto& pt : points) {
+                tempHull->addPoint(pt, false); 
+            }
+            tempHull->recalcLocalAabb();
+
+            // THE FIX: Strip the margin BEFORE optimization so it doesn't bloat!
+            tempHull->setMargin(0.0f);
+
+            // 2. Shrink-wrap it perfectly (passing 0.0f stops the inflation)
+            btShapeHull* optimizedHull = new btShapeHull(tempHull);
+            optimizedHull->buildHull(0.0f);
+
+            // 3. Extract the clean geometry
+            btConvexHullShape* finalHull = new btConvexHullShape(
+                (const btScalar*)optimizedHull->getVertexPointer(), 
+                optimizedHull->numVertices()
+            );
+            
+            delete tempHull;
+            delete optimizedHull;
+
+            shape = finalHull;
+            // 4. Apply a microscopic, safe margin to the final shape for the GJK solver
+            shape->setMargin(0.005f);
+
+            // --- X-RAY DEBUGGER ---
+            btVector3 aabbMin, aabbMax;
+            btTransform t; t.setIdentity();
+            shape->getAabb(t, aabbMin, aabbMax);
+            std::cout << "[Physics Debug] Hull Created!\n";
+            std::cout << "  -> Min: " << aabbMin.x() << ", " << aabbMin.y() << ", " << aabbMin.z() << "\n";
+            std::cout << "  -> Max: " << aabbMax.x() << ", " << aabbMax.y() << ", " << aabbMax.z() << "\n";
+            std::cout << "  -> Width(X): " << (aabbMax.x() - aabbMin.x()) << "m\n";
+            std::cout << "  -> Height(Y): " << (aabbMax.y() - aabbMin.y()) << "m\n";
+
+            mass = 1.0f;
+        }
+        else if (type == "Box") {
+            // 1. Find the absolute boundaries of your Blender model
+            btVector3 minPt(1e30f, 1e30f, 1e30f);
+            btVector3 maxPt(-1e30f, -1e30f, -1e30f);
+            for (const auto& pt : points) {
+                minPt.setMin(pt);
+                maxPt.setMax(pt);
+            }
+            
+            // 2. Calculate the "Half-Extents" (Bullet requires distance from center to edge)
+            btVector3 halfExtents = (maxPt - minPt) * 0.5f;
+            
+            // 3. Create a mathematically perfect primitive!
+            shape = new btBoxShape(halfExtents);
+            
+            // Primitives don't suffer from margin bugs as badly, but we keep it small
+            shape->setMargin(0.05f); 
+            mass = 1.0f;
+        }
+
+        // ... [Rest of your rigid body initialization code remains the same] ...
+        btTransform transform;
+        transform.setIdentity(); 
+        btDefaultMotionState* motionState = new btDefaultMotionState(transform);
+        
+        btVector3 inertia(0, 0, 0);
+        if (mass > 0.0f) shape->calculateLocalInertia(mass, inertia);
+        
+        btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, inertia);
+        body = new btRigidBody(rbInfo);
+        
+        body->setRestitution(0.5f); 
+        body->setFriction(0.8f);
+
+        // Helps the cube completely freeze once it settles flat
+        body->setSleepingThresholds(0.05f, 0.05f);
+        world->addRigidBody(body);
+    }
+};
+
+
 // --- GLOBAL ENGINE STATE ---
 struct EngineState {
     GLFWwindow* window = nullptr;
@@ -81,6 +230,12 @@ struct EngineState {
     unsigned int depthMap;
     unsigned int irradianceMap;
     const unsigned int SHADOW_RES = 4096; // 4K shadows for Sponza!
+
+    btDefaultCollisionConfiguration* collisionConfig = nullptr;
+    btCollisionDispatcher* dispatcher = nullptr;
+    btBroadphaseInterface* overlappingPairCache = nullptr;
+    btSequentialImpulseConstraintSolver* solver = nullptr;
+    btDiscreteDynamicsWorld* dynamicsWorld = nullptr;
 
 
     // Camera State
@@ -99,6 +254,7 @@ struct EngineState {
 
     // Timing
     std::chrono::high_resolution_clock::time_point last_time;
+    float lastFrameTime = 0.0f;
 
     int width = 800, height = 600;
 } state;
@@ -161,6 +317,29 @@ bool init_window(int width, int height, const std::string& title) {
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
+    // --- NEW: INITIALIZE BULLET PHYSICS ---
+    // 1. Memory setup for collision algorithms
+    state.collisionConfig = new btDefaultCollisionConfiguration();
+    // 2. The collision dispatcher (handles algorithms when two objects touch)
+    state.dispatcher = new btCollisionDispatcher(state.collisionConfig);
+    // 3. Broadphase (quickly rules out objects that are too far apart to collide)
+    state.overlappingPairCache = new btDbvtBroadphase();
+    // 4. The math solver (calculates the actual bouncing, sliding, and friction)
+    state.solver = new btSequentialImpulseConstraintSolver();
+    
+    // 5. Build the World!
+    state.dynamicsWorld = new btDiscreteDynamicsWorld(
+        state.dispatcher, state.overlappingPairCache, state.solver, state.collisionConfig);
+    
+    // 6. Set standard Earth gravity (Y is up, so gravity pulls down at -9.81m/s^2)
+    state.dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+    
+    // Initialize timing
+    state.lastFrameTime = glfwGetTime();
+
 
     return true;
 }
@@ -309,6 +488,100 @@ void set_sun_color(float r, float g, float b) {
 }
 
 
+// --- NEW PYTHON API FUNCTIONS ---
+std::shared_ptr<PhysicsCollider> physics_mesh(const std::string& filepath) {
+    return std::make_shared<PhysicsCollider>(filepath);
+}
+
+void set_physics_mass(std::shared_ptr<PhysicsCollider> collider, float mass) {
+    if (collider && state.dynamicsWorld) {
+        collider->set_mass(mass, state.dynamicsWorld);
+    }
+}
+
+void set_physics_type(std::shared_ptr<PhysicsCollider> collider, const std::string& type) {
+    if (collider && state.dynamicsWorld) {
+        collider->set_physics_type(type, state.dynamicsWorld);
+    }
+}
+
+void bind_physics_mesh(std::shared_ptr<PhysicsCollider> collider, std::shared_ptr<Entity> entity) {
+    if (entity) entity->physics_body = collider;
+}
+
+void set_physics_position(std::shared_ptr<PhysicsCollider> collider, float x, float y, float z) {
+    if (collider && collider->body) {
+        // Grab the current transform
+        btTransform trans;
+        collider->body->getMotionState()->getWorldTransform(trans);
+        
+        // Move it to the new Python coordinates
+        trans.setOrigin(btVector3(x, y, z));
+        
+        // Violently overwrite Bullet's internal state
+        collider->body->setWorldTransform(trans);
+        collider->body->getMotionState()->setWorldTransform(trans);
+        
+        // Clear any momentum so it drops perfectly still
+        collider->body->clearForces();
+        collider->body->setLinearVelocity(btVector3(0,0,0));
+        collider->body->setAngularVelocity(btVector3(0,0,0));
+    }
+}
+
+void set_physics_rotation(std::shared_ptr<PhysicsCollider> collider, float rot_x, float rot_y, float rot_z) {
+    if (collider && collider->body) {
+        // Grab the current transform
+        btTransform trans;
+        collider->body->getMotionState()->getWorldTransform(trans);
+        
+        // Convert Python's Euler angles (Radians) into Bullet's 4D Quaternions
+        btQuaternion quat;
+        // setEuler expects Yaw (Y), Pitch (X), Roll (Z)
+        quat.setEuler(rot_y, rot_x, rot_z); 
+        
+        // Apply the new rotation
+        trans.setRotation(quat);
+        
+        // Violently overwrite Bullet's internal state
+        collider->body->setWorldTransform(trans);
+        collider->body->getMotionState()->setWorldTransform(trans);
+        
+        // Clear any spinning momentum so it doesn't violently flail
+        collider->body->clearForces();
+        collider->body->setAngularVelocity(btVector3(0, 0, 0));
+    }
+}
+
+// --- UPDATE STEP PHYSICS ---
+void step_physics() {
+    if (!state.dynamicsWorld || !state.scene) return;
+
+    float currentFrameTime = glfwGetTime();
+    float deltaTime = currentFrameTime - state.lastFrameTime;
+    state.lastFrameTime = currentFrameTime;
+
+    state.dynamicsWorld->stepSimulation(deltaTime, 10);
+
+    // MATRIX HIJACK: Sync graphics to physics!
+    for (auto& ent : state.scene->entities) {
+        if (ent->physics_body && ent->physics_body->body && ent->physics_body->mass > 0.0f) {
+            btTransform trans;
+            ent->physics_body->body->getMotionState()->getWorldTransform(trans);
+            
+            ent->position = Vector3(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
+
+            // Direct matrix sync — no Euler needed
+            btMatrix3x3 rot = trans.getBasis();
+            ent->use_physics_transform = true;
+            for (int row = 0; row < 3; ++row)
+                for (int col = 0; col < 3; ++col)
+                    ent->physics_rotation[row * 3 + col] = rot[row][col];
+            
+        }
+    }
+}
+
 void render_frame() {
     if (!state.window) return;
 
@@ -441,6 +714,8 @@ PYBIND11_MODULE(radiance3d, m) {
 
     // Expose Entity so Python can hold a reference to it
     py::class_<Entity, std::shared_ptr<Entity>>(m, "Entity");
+    py::class_<PhysicsCollider, std::shared_ptr<PhysicsCollider>>(m, "PhysicsCollider")
+        .def("set_physics_type", &set_physics_type);
 
     // Map the global C++ functions directly to the Python module namespace
     m.def("init_window", &init_window);
@@ -463,4 +738,10 @@ PYBIND11_MODULE(radiance3d, m) {
     m.def("set_sun_direction", &set_sun_direction);
     m.def("set_sun_color", &set_sun_color);
     m.def("load_skybox", &load_skybox);
+    m.def("step_physics", &step_physics); // NEW!
+    m.def("physics_mesh", &physics_mesh);
+    m.def("bind_physics_mesh", &bind_physics_mesh);
+    m.def("set_physics_position", &set_physics_position);
+    m.def("set_physics_rotation", &set_physics_rotation);
+    m.def("set_physics_mass", &set_physics_mass);
 }

@@ -24,12 +24,47 @@ FetchContent_MakeAvailable(glfw)
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 find_package(OpenGL REQUIRED)
 
+
+# 1. Disable all of Bullets bloat so we only compile the core math and physics
+set(BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
+set(BUILD_CPU_DEMOS OFF CACHE BOOL "" FORCE)
+set(BUILD_OPENGL3_DEMOS OFF CACHE BOOL "" FORCE)
+set(BUILD_BULLET2_DEMOS OFF CACHE BOOL "" FORCE)
+set(BUILD_EXTRAS OFF CACHE BOOL "" FORCE)
+
+# 2. Download the official Bullet3 repository
+FetchContent_Declare(
+    bullet
+    GIT_REPOSITORY https://github.com/bulletphysics/bullet3.git
+    GIT_TAG 3.25 # Locking to a stable release
+)
+FetchContent_MakeAvailable(bullet)
+
 # 4. Add GLAD source file directly to the engine compilation
 pybind11_add_module(radiance3d engine.cpp glad/src/glad.c)
 
 # 5. Tell the engine where the GLAD headers are
 target_include_directories(radiance3d PRIVATE glad/include)
 
+# Tell the compiler where to find Bullets header files
+target_include_directories(radiance3d PRIVATE ${bullet_SOURCE_DIR}/src)
+
+# 3. Add the specific Bullet targets to your engine link step
+# (Make sure to replace your old target_link_libraries with this one!)
+target_link_libraries(radiance3d PRIVATE 
+    pybind11::module 
+    BulletDynamics 
+    BulletCollision 
+    LinearMath
+)
+
 # 6. Link libraries and force static
 target_link_libraries(radiance3d PRIVATE glfw OpenGL::GL)
 target_link_options(radiance3d PRIVATE -static -static-libgcc -static-libstdc++)
+
+# Automatically copy the compiled .pyd file to the root directory
+add_custom_command(TARGET radiance3d POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:radiance3d>
+    ${CMAKE_SOURCE_DIR}/
+)

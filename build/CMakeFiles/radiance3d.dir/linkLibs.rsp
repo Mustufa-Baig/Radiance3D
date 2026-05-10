@@ -1,1 +1,1 @@
- "_deps/glfw-build/src/libglfw3.a" -lopengl32 "C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/libs/python314.lib" -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
+ lib/libBulletDynamics.a lib/libBulletCollision.a lib/libLinearMath.a lib/libglfw3.a -lopengl32 "C:/Users/Mustufa/AppData/Local/Python/pythoncore-3.14-64/libs/python314.lib" -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

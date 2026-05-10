@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "../../../lib/libglfw3.a"
+  "../../../lib/libglfw3.pdb"
   "CMakeFiles/glfw.dir/context.c.obj"
   "CMakeFiles/glfw.dir/context.c.obj.d"
   "CMakeFiles/glfw.dir/egl_context.c.obj"
@@ -29,8 +31,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/glfw.dir/win32_window.c.obj.d"
   "CMakeFiles/glfw.dir/window.c.obj"
   "CMakeFiles/glfw.dir/window.c.obj.d"
-  "libglfw3.a"
-  "libglfw3.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

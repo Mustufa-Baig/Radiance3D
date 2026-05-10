@@ -20,19 +20,29 @@ public:
         bool isPackedGLTF = false;
     };
     std::vector<SubMesh> submeshes;
+    std::shared_ptr<class PhysicsCollider> physics_body; // Forward declaration
     
     Vector3 position, rotation, scale_vec, color;
     float metallic, roughness, ao;
+    
+    bool use_physics_transform = false;
+    float physics_rotation[9]; // Bullet's 3x3 rotation matrix, row-major
     
     Entity() : position(0,0,0), rotation(0,0,0), scale_vec(1,1,1), color(0.8f, 0.8f, 0.8f), metallic(0.0f), roughness(0.5f), ao(1.0f) {}
 
     Matrix4x4 get_model_matrix() const {
         Matrix4x4 t = Matrix4x4::translation(position);
-        Matrix4x4 rx = Matrix4x4::rotateX(rotation.x);
-        Matrix4x4 ry = Matrix4x4::rotateY(rotation.y);
-        Matrix4x4 rz = Matrix4x4::rotateZ(rotation.z);
         Matrix4x4 s = Matrix4x4::scale(scale_vec);
-        return t * rz * ry * rx * s;
+        Matrix4x4 r;
+        if (use_physics_transform) {
+            // Directly transplant Bullet's 3x3 into your 4x4 (row-major)
+            r.m[0][0]=physics_rotation[0]; r.m[0][1]=physics_rotation[1]; r.m[0][2]=physics_rotation[2];
+            r.m[1][0]=physics_rotation[3]; r.m[1][1]=physics_rotation[4]; r.m[1][2]=physics_rotation[5];
+            r.m[2][0]=physics_rotation[6]; r.m[2][1]=physics_rotation[7]; r.m[2][2]=physics_rotation[8];
+        } else {
+            r = Matrix4x4::rotateZ(rotation.z) * Matrix4x4::rotateY(rotation.y) * Matrix4x4::rotateX(rotation.x);
+        }
+        return t * r * s;
     }
 };
 

@@ -212,6 +212,149 @@ glfw/fast:
 	$(MAKE) $(MAKESILENT) -f _deps\glfw-build\src\CMakeFiles\glfw.dir\build.make _deps/glfw-build/src/CMakeFiles/glfw.dir/build
 .PHONY : glfw/fast
 
+#=============================================================================
+# Target rules for targets named Bullet3OpenCL_clew
+
+# Build rule for target.
+Bullet3OpenCL_clew: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Bullet3OpenCL_clew
+.PHONY : Bullet3OpenCL_clew
+
+# fast build rule for target.
+Bullet3OpenCL_clew/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\Bullet3OpenCL\CMakeFiles\Bullet3OpenCL_clew.dir\build.make _deps/bullet-build/src/Bullet3OpenCL/CMakeFiles/Bullet3OpenCL_clew.dir/build
+.PHONY : Bullet3OpenCL_clew/fast
+
+#=============================================================================
+# Target rules for targets named Bullet2FileLoader
+
+# Build rule for target.
+Bullet2FileLoader: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Bullet2FileLoader
+.PHONY : Bullet2FileLoader
+
+# fast build rule for target.
+Bullet2FileLoader/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\Bullet3Serialize\Bullet2FileLoader\CMakeFiles\Bullet2FileLoader.dir\build.make _deps/bullet-build/src/Bullet3Serialize/Bullet2FileLoader/CMakeFiles/Bullet2FileLoader.dir/build
+.PHONY : Bullet2FileLoader/fast
+
+#=============================================================================
+# Target rules for targets named Bullet3Dynamics
+
+# Build rule for target.
+Bullet3Dynamics: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Bullet3Dynamics
+.PHONY : Bullet3Dynamics
+
+# fast build rule for target.
+Bullet3Dynamics/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\Bullet3Dynamics\CMakeFiles\Bullet3Dynamics.dir\build.make _deps/bullet-build/src/Bullet3Dynamics/CMakeFiles/Bullet3Dynamics.dir/build
+.PHONY : Bullet3Dynamics/fast
+
+#=============================================================================
+# Target rules for targets named Bullet3Collision
+
+# Build rule for target.
+Bullet3Collision: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Bullet3Collision
+.PHONY : Bullet3Collision
+
+# fast build rule for target.
+Bullet3Collision/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\Bullet3Collision\CMakeFiles\Bullet3Collision.dir\build.make _deps/bullet-build/src/Bullet3Collision/CMakeFiles/Bullet3Collision.dir/build
+.PHONY : Bullet3Collision/fast
+
+#=============================================================================
+# Target rules for targets named Bullet3Geometry
+
+# Build rule for target.
+Bullet3Geometry: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Bullet3Geometry
+.PHONY : Bullet3Geometry
+
+# fast build rule for target.
+Bullet3Geometry/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\Bullet3Geometry\CMakeFiles\Bullet3Geometry.dir\build.make _deps/bullet-build/src/Bullet3Geometry/CMakeFiles/Bullet3Geometry.dir/build
+.PHONY : Bullet3Geometry/fast
+
+#=============================================================================
+# Target rules for targets named BulletInverseDynamics
+
+# Build rule for target.
+BulletInverseDynamics: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 BulletInverseDynamics
+.PHONY : BulletInverseDynamics
+
+# fast build rule for target.
+BulletInverseDynamics/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\BulletInverseDynamics\CMakeFiles\BulletInverseDynamics.dir\build.make _deps/bullet-build/src/BulletInverseDynamics/CMakeFiles/BulletInverseDynamics.dir/build
+.PHONY : BulletInverseDynamics/fast
+
+#=============================================================================
+# Target rules for targets named BulletSoftBody
+
+# Build rule for target.
+BulletSoftBody: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 BulletSoftBody
+.PHONY : BulletSoftBody
+
+# fast build rule for target.
+BulletSoftBody/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\BulletSoftBody\CMakeFiles\BulletSoftBody.dir\build.make _deps/bullet-build/src/BulletSoftBody/CMakeFiles/BulletSoftBody.dir/build
+.PHONY : BulletSoftBody/fast
+
+#=============================================================================
+# Target rules for targets named BulletCollision
+
+# Build rule for target.
+BulletCollision: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 BulletCollision
+.PHONY : BulletCollision
+
+# fast build rule for target.
+BulletCollision/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\BulletCollision\CMakeFiles\BulletCollision.dir\build.make _deps/bullet-build/src/BulletCollision/CMakeFiles/BulletCollision.dir/build
+.PHONY : BulletCollision/fast
+
+#=============================================================================
+# Target rules for targets named BulletDynamics
+
+# Build rule for target.
+BulletDynamics: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 BulletDynamics
+.PHONY : BulletDynamics
+
+# fast build rule for target.
+BulletDynamics/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\BulletDynamics\CMakeFiles\BulletDynamics.dir\build.make _deps/bullet-build/src/BulletDynamics/CMakeFiles/BulletDynamics.dir/build
+.PHONY : BulletDynamics/fast
+
+#=============================================================================
+# Target rules for targets named LinearMath
+
+# Build rule for target.
+LinearMath: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 LinearMath
+.PHONY : LinearMath
+
+# fast build rule for target.
+LinearMath/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\LinearMath\CMakeFiles\LinearMath.dir\build.make _deps/bullet-build/src/LinearMath/CMakeFiles/LinearMath.dir/build
+.PHONY : LinearMath/fast
+
+#=============================================================================
+# Target rules for targets named Bullet3Common
+
+# Build rule for target.
+Bullet3Common: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Bullet3Common
+.PHONY : Bullet3Common
+
+# fast build rule for target.
+Bullet3Common/fast:
+	$(MAKE) $(MAKESILENT) -f _deps\bullet-build\src\Bullet3Common\CMakeFiles\Bullet3Common.dir\build.make _deps/bullet-build/src/Bullet3Common/CMakeFiles/Bullet3Common.dir/build
+.PHONY : Bullet3Common/fast
+
 engine.obj: engine.cpp.obj
 .PHONY : engine.obj
 
@@ -274,6 +417,17 @@ help:
 	@echo ... rebuild_cache
 	@echo ... uninstall
 	@echo ... update_mappings
+	@echo ... Bullet2FileLoader
+	@echo ... Bullet3Collision
+	@echo ... Bullet3Common
+	@echo ... Bullet3Dynamics
+	@echo ... Bullet3Geometry
+	@echo ... Bullet3OpenCL_clew
+	@echo ... BulletCollision
+	@echo ... BulletDynamics
+	@echo ... BulletInverseDynamics
+	@echo ... BulletSoftBody
+	@echo ... LinearMath
 	@echo ... glfw
 	@echo ... radiance3d
 	@echo ... engine.obj
