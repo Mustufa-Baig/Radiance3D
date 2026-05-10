@@ -25,6 +25,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.16.5
         env:
           # Skip PyPy and severely outdated Python versions to save build time
+          CIBW_BEFORE_ALL_LINUX: "yum install -y libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel"
           CIBW_SKIP: "pp* cp36-* cp37-*" 
           
           # Force cibuildwheel to use modern C++ standards
