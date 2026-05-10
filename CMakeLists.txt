@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 project(Radiance3DCore)
 
+# Force all static libraries to be compiled with Position Independent Code
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 include(FetchContent)
 
 # 1. Fetch pybind11
