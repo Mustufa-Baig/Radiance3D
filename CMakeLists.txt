@@ -21,7 +21,7 @@ FetchContent_Declare(glfw
 FetchContent_MakeAvailable(glfw)
 
 # 3. Locate Python and OpenGL
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
+find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
 find_package(OpenGL REQUIRED)
 
 
