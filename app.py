@@ -8,23 +8,22 @@ r3d.load_skybox("canary.hdr")
 
 sponza = r3d.load_model("sponza.glb") 
 cube = r3d.load_model("cube.glb")
+
+
+sponza_collider = r3d.physics_mesh("sponza rough blockout.glb")
 cube_collider = r3d.physics_mesh("cube.glb")
 
-r3d.set_position(sponza, 0, 0, 0)
-r3d.set_rotation(sponza, math.radians(0),0,0)
 
-r3d.load_model("floor.glb")
-floor_collider = r3d.physics_mesh("floor.glb")
-
-floor_collider.set_physics_type("Convex Hull")
+sponza_collider.set_physics_type("Compound Hull")
 cube_collider.set_physics_type("Convex Hull")
 
-r3d.set_physics_mass(floor_collider, 0.0)
 
-# Bind them together!
+r3d.set_physics_mass(sponza_collider, 0.0)
+
 r3d.bind_physics_mesh(cube_collider, cube)
-r3d.set_physics_rotation(cube_collider, math.radians(45), 0, math.radians(35))
 
+
+r3d.set_physics_rotation(cube_collider, math.radians(45), 0, math.radians(45))
 r3d.set_physics_position(cube_collider, 0, 15, 0)
 
 r3d.set_camera_position(7, 2, 0)

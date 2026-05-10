@@ -68,35 +68,26 @@ void renderQuad() {
     glBindVertexArray(0);
 }
 
-
 class PhysicsCollider {
 public:
-    std::vector<btVector3> points;
+    std::vector<btVector3> points; // Legacy flat list for single objects
+    std::vector<std::vector<btVector3>> separate_meshes; // New nested list for compounds
     btCollisionShape* shape = nullptr;
     btRigidBody* body = nullptr;
     float mass = 0.0f;
 
-    // 1. Extract raw positions from the glTF file
     PhysicsCollider(const std::string& filepath) {
-        std::cout << "[Radiance3D] Extracting Physics Hull: " << filepath << "\n";
         for (auto& data : GltfLoader::load(filepath)) {
-            // Skip 12 floats at a time to grab ONLY the Position (x, y, z)
+            std::vector<btVector3> current_mesh;
             for (size_t i = 0; i < data.vertices.size(); i += 12) {
-                points.push_back(btVector3(data.vertices[i], data.vertices[i+1], data.vertices[i+2]));
+                btVector3 pt(data.vertices[i], data.vertices[i+1], data.vertices[i+2]);
+                points.push_back(pt); // Keep flattening for backward compatibility
+                current_mesh.push_back(pt);
             }
+            if (!current_mesh.empty()) separate_meshes.push_back(current_mesh);
         }
-
-        // --- VERTEX DUMP DEBUGGER ---
-        std::cout << "[Physics Debug] Mesh: " << filepath << "\n";
-        std::cout << "Total extracted points: " << points.size() << "\n";
-        for (int i = 0; i < std::min((int)points.size(), 8); ++i) {
-            std::cout << "  Vertex " << i << ": [ " 
-                      << points[i].x() << ", " 
-                      << points[i].y() << ", " 
-                      << points[i].z() << " ]\n";
-        }
-        std::cout << "--------------------------------\n";
     }
+
     void set_mass(float new_mass, btDiscreteDynamicsWorld* world) {
         if (!body || !shape || !world) return;
         
@@ -172,6 +163,33 @@ public:
             std::cout << "  -> Height(Y): " << (aabbMax.y() - aabbMin.y()) << "m\n";
 
             mass = 1.0f;
+        }
+        else if (type == "Compound Hull") {
+            btCompoundShape* compound = new btCompoundShape();
+            
+            for (const auto& mesh_points : separate_meshes) {
+                btConvexHullShape* tempHull = new btConvexHullShape();
+                for (const auto& pt : mesh_points) tempHull->addPoint(pt, false);
+                tempHull->recalcLocalAabb();
+                tempHull->setMargin(0.0f);
+
+                btShapeHull* optimizedHull = new btShapeHull(tempHull);
+                optimizedHull->buildHull(0.0f);
+
+                btConvexHullShape* finalChild = new btConvexHullShape(
+                    (const btScalar*)optimizedHull->getVertexPointer(), optimizedHull->numVertices());
+                finalChild->setMargin(0.005f);
+
+                btTransform childTransform;
+                childTransform.setIdentity(); // Vertices are already in correct world space from Blender
+                compound->addChildShape(childTransform, finalChild);
+
+                delete tempHull;
+                delete optimizedHull;
+            }
+            
+            shape = compound;
+            mass = 1.0f; 
         }
         else if (type == "Box") {
             // 1. Find the absolute boundaries of your Blender model
