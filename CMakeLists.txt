@@ -68,3 +68,6 @@ add_custom_command(TARGET radiance3d POST_BUILD
     $<TARGET_FILE:radiance3d>
     ${CMAKE_SOURCE_DIR}/
 )
+
+# Tell the packager to bundle the compiled module into the final wheel
+install(TARGETS radiance3d DESTINATION .)

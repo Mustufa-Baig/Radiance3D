@@ -30,10 +30,28 @@ r3d.set_camera_position(7, 2, 0)
 r3d.camera_look_at(0, 2, 0)
 
 r3d.set_sun_direction(-0.5, -1.0, 0.2)
-r3d.set_sun_color(8.0, 7.5, 7.0)
+r3d.set_sun_color(18.0, 17.5, 17.0)
 
 start_time = time.time()
+panelty=0
 
 while r3d.is_running():
+    elapsed = time.time() - start_time
+    r3d.set_sun_direction(0.2*math.sin(elapsed * 0.5), -1.0, 0.2*math.cos(elapsed * 0.5))
+    
+    if panelty>0:
+        panelty-=1
+    
+    if r3d.get_key(ord('X')) and panelty<=0:
+        panelty=100
+        c = r3d.load_model("cube.glb")
+        cc = r3d.physics_mesh("cube.glb")
+        cc.set_physics_type("Convex Hull")
+        r3d.bind_physics_mesh(cc, c)
+
+        r3d.set_physics_rotation(cc, math.radians(45), 0, math.radians(45))
+        r3d.set_physics_position(cc, 0, 15, 0)
+
+
     r3d.step_physics()
     r3d.render_frame()
