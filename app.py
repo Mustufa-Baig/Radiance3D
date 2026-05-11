@@ -7,11 +7,11 @@ r3d.set_fps_camera(True)
 r3d.load_skybox("canary.hdr")
 
 sponza = r3d.load_model("sponza.glb") 
-cube = r3d.load_model("cube.glb")
+cube = r3d.load_model("monkey.glb")
 
 
 sponza_collider = r3d.physics_mesh("sponza rough blockout.glb")
-cube_collider = r3d.physics_mesh("cube.glb")
+cube_collider = r3d.physics_mesh("monkey.glb")
 
 
 sponza_collider.set_physics_type("Compound Hull")
@@ -43,9 +43,9 @@ while r3d.is_running():
         panelty-=1
     
     if r3d.get_key(ord('X')) and panelty<=0:
-        panelty=100
-        c = r3d.load_model("cube.glb")
-        cc = r3d.physics_mesh("cube.glb")
+        panelty=10
+        c = r3d.load_model("monkey.glb")
+        cc = r3d.physics_mesh("monkey.glb")
         cc.set_physics_type("Convex Hull")
         r3d.bind_physics_mesh(cc, c)
 
