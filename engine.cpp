@@ -1,7 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <btBulletDynamicsCommon.h>
-#include <btBulletDynamicsCommon.h>
 #include <BulletCollision/CollisionShapes/btShapeHull.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
