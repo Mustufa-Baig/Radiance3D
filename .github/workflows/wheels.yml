@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # We will spin up all three operating systems!
+        # Spin up all three operating systems!
         os: [ windows-latest ]
 
     steps:
@@ -19,17 +19,28 @@ jobs:
           submodules: recursive # Ensures pybind11 and glfw are pulled
 
       - name: Build Wheels (cibuildwheel)
+        # Upgraded to v3.4.1 for Python 3.13 and 3.14 support
         uses: pypa/cibuildwheel@v3.4.1
         env:
-          CIBW_BUILD: "cp314-win_amd64"
-          CIBW_SKIP: "pp* cp36-* cp37-*"
+          # Skip PyPy, outdated Python versions, and Alpine (musllinux)
+          CIBW_SKIP: "pp* cp36-* cp37-* *-musllinux*"
+          
           # Force the builder to only compile modern 64-bit architectures
           CIBW_ARCHS: "auto64"
           
-          CIBW_BEFORE_BUILD_WINDOWS: "pip install delvewheel"
-          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair -w {dest_dir} {wheel}"
-          # Force cibuildwheel to use modern C++ standards
+          # --- LINUX SPECIFIC CONFIGURATION ---
+          # Use a modern Linux image that supports 'dnf'
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          # Install X11 graphical headers needed for GLFW
+          CIBW_BEFORE_ALL_LINUX: "dnf install -y libXrandr-devel libXinerama-devel libXcursor-devel libXi-devel"
           
+          # --- WINDOWS SPECIFIC CONFIGURATION ---
+          # Install delvewheel to bundle Visual C++ DLLs for standalone execution
+          CIBW_BEFORE_BUILD_WINDOWS: "pip install delvewheel"
+          # Repair the Windows wheels by packing MSVCP140.dll inside them
+          CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair -w {dest_dir} {wheel}"
+          
+          # Force cibuildwheel to use modern C++ standards
           CIBW_ENVIRONMENT: CXXFLAGS="-std=c++17"
 
       - name: Upload Compiled Wheels
