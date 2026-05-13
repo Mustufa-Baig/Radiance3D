@@ -23,7 +23,7 @@ jobs:
         uses: pypa/cibuildwheel@v3.4.1
         env:
           # Skip PyPy, outdated Python versions, and Alpine (musllinux)
-          CIBW_SKIP: "pp* cp36-* cp37-* *-musllinux*"
+          CIBW_SKIP: "pp* cp36-* cp37-* *-musllinux* cp*t-*"
           
           # Force the builder to only compile modern 64-bit architectures
           CIBW_ARCHS: "auto64"
