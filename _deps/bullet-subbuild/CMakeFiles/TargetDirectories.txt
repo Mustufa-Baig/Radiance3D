@@ -1,0 +1,3 @@
+C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/_deps/bullet-subbuild/CMakeFiles/bullet-populate.dir
+C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/_deps/bullet-subbuild/CMakeFiles/edit_cache.dir
+C:/Users/Mustufa/Projects/Programming/game_engine/Radiance3D/_deps/bullet-subbuild/CMakeFiles/rebuild_cache.dir
