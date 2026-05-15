@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 project(Radiance3DCore)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 include(FetchContent)
 
 # ── pybind11 ──────────────────────────────────
