@@ -1,24 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(Radiance3DCore)
 
-# ─────────────────────────────────────────────
-# Detect environment: GitHub Actions sets CI=true automatically.
-# Use this to switch between a wheel-ready release build and a
-# fast local dev build without any manual flags.
-# ─────────────────────────────────────────────
-if(DEFINED ENV{CI} AND "$ENV{CI}" STREQUAL "true")
-    message(STATUS "CI environment detected → using release/wheel build config")
-    set(IS_CI_BUILD TRUE)
-else()
-    message(STATUS "Local environment detected → using dev build config")
-    set(IS_CI_BUILD FALSE)
-endif()
-
-# PIC is required for manylinux wheel builds on CI; unnecessary overhead locally
-if(IS_CI_BUILD)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-endif()
-
 include(FetchContent)
 
 # ── pybind11 ──────────────────────────────────
@@ -38,8 +20,11 @@ FetchContent_Declare(glfw
 )
 FetchContent_MakeAvailable(glfw)
 
+# ── Python ────────────────────────────────────
+# Development.Module is the only component needed for a pybind11 extension.
+# It works on all platforms including manylinux containers where
+# Development.Embed / Python_LIBRARIES are intentionally absent.
 find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
-
 find_package(OpenGL REQUIRED)
 
 # ── Bullet3 ───────────────────────────────────
@@ -77,16 +62,14 @@ target_link_options(radiance3d PRIVATE
     -static-libstdc++
 )
 
-# ── Post-build: copy .pyd/.so to project root ─
+# ── Post-build: copy to project root ──────────
 add_custom_command(TARGET radiance3d POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
         $<TARGET_FILE:radiance3d>
         ${CMAKE_SOURCE_DIR}/
 )
 
-# ── Install (wheel packaging) — CI only ───────
-# The install() rule is what tells the wheel builder (scikit-build / cibuildwheel)
-# where to place the module inside the .whl archive. Not needed locally.
-if(IS_CI_BUILD)
-    install(TARGETS radiance3d DESTINATION .)
-endif()
+# ── Install (wheel packaging) ─────────────────
+# Harmless locally unless cmake --install is explicitly run (it isn't).
+# Required on CI for cibuildwheel to bundle the module into the .whl.
+install(TARGETS radiance3d DESTINATION .)
