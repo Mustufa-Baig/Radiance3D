@@ -155,12 +155,6 @@ public:
             btVector3 aabbMin, aabbMax;
             btTransform t; t.setIdentity();
             shape->getAabb(t, aabbMin, aabbMax);
-            std::cout << "[Physics Debug] Hull Created!\n";
-            std::cout << "  -> Min: " << aabbMin.x() << ", " << aabbMin.y() << ", " << aabbMin.z() << "\n";
-            std::cout << "  -> Max: " << aabbMax.x() << ", " << aabbMax.y() << ", " << aabbMax.z() << "\n";
-            std::cout << "  -> Width(X): " << (aabbMax.x() - aabbMin.x()) << "m\n";
-            std::cout << "  -> Height(Y): " << (aabbMax.y() - aabbMin.y()) << "m\n";
-
             mass = 1.0f;
         }
         else if (type == "Compound Hull") {
@@ -263,6 +257,7 @@ struct EngineState {
     float yaw = -90.0f;
     float pitch = 0.0f;
     float last_x = 400.0f, last_y = 300.0f;
+    float mouse_dx = 0.0f, mouse_dy = 0.0f;
     bool first_mouse = true;
     bool fps_camera_enabled = true;
 
@@ -476,9 +471,47 @@ bool get_key(int key_code) {
     return glfwGetKey(state.window, key_code) == GLFW_PRESS;
 }
 
+py::tuple get_mouse_position() { 
+    if (!state.window)
+        return py::make_tuple(0.0f, 0.0f);
+    double x, y;
+    glfwGetCursorPos(state.window, &x, &y);
+    return py::make_tuple((float)x, (float)y);
+}
+
+py::tuple get_mouse_delta() {
+    return py::make_tuple(state.mouse_dx, state.mouse_dy);
+}
+
+
 py::tuple get_position(std::shared_ptr<Entity> ent) {
     if (!ent) return py::make_tuple(0.0f, 0.0f, 0.0f);
     return py::make_tuple(ent->position.x, ent->position.y, ent->position.z);
+}
+
+// --- GETTERS ---
+py::tuple get_rotation(std::shared_ptr<Entity> ent) {
+    if (!ent) return py::make_tuple(0.0f, 0.0f, 0.0f);
+    return py::make_tuple(ent->rotation.x, ent->rotation.y, ent->rotation.z);
+}
+
+py::tuple get_physics_position(std::shared_ptr<PhysicsCollider> collider) {
+    if (!collider || !collider->body) return py::make_tuple(0.0f, 0.0f, 0.0f);
+    btTransform trans;
+    collider->body->getMotionState()->getWorldTransform(trans);
+    return py::make_tuple(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
+}
+
+py::tuple get_physics_rotation(std::shared_ptr<PhysicsCollider> collider) {
+    if (!collider || !collider->body) return py::make_tuple(0.0f, 0.0f, 0.0f);
+    btTransform trans;
+    collider->body->getMotionState()->getWorldTransform(trans);
+    
+    btScalar yaw, pitch, roll;
+    trans.getBasis().getEulerYPR(yaw, pitch, roll); 
+    
+    // Return in standard X (Pitch), Y (Yaw), Z (Roll) order
+    return py::make_tuple((float)pitch, (float)yaw, (float)roll); 
 }
 
 bool is_running() {
@@ -570,6 +603,28 @@ void set_physics_rotation(std::shared_ptr<PhysicsCollider> collider, float rot_x
     }
 }
 
+void apply_physics_force(std::shared_ptr<PhysicsCollider> collider, float fx, float fy, float fz, float rx = 0.0f, float ry = 0.0f, float rz = 0.0f) {
+    if (collider && collider->body) {
+        collider->body->activate(true); 
+        collider->body->applyForce(btVector3(fx, fy, fz), btVector3(rx, ry, rz));
+    }
+}
+
+void apply_physics_torque(std::shared_ptr<PhysicsCollider> collider, float tx, float ty, float tz) {
+    if (collider && collider->body) {
+        collider->body->activate(true);
+        collider->body->applyTorque(btVector3(tx, ty, tz));
+    }
+}
+
+void apply_physics_central_impulse(std::shared_ptr<PhysicsCollider> collider, float ix, float iy, float iz) {
+    if (collider && collider->body) {
+        collider->body->activate(true);
+        collider->body->applyCentralImpulse(btVector3(ix, iy, iz));
+    }
+}
+
+
 // --- UPDATE STEP PHYSICS ---
 void step_physics() {
     if (!state.dynamicsWorld || !state.scene) return;
@@ -611,23 +666,28 @@ void render_frame() {
     if (glfwGetKey(state.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(state.window, true);
 
-    // 3. Process FPS Camera Logic (If enabled)
-    if (state.fps_camera_enabled) {
-        double mx, my;
-        glfwGetCursorPos(state.window, &mx, &my);
-        float mouse_x = static_cast<float>(mx);
-        float mouse_y = static_cast<float>(my);
+    double mx, my;
+    glfwGetCursorPos(state.window, &mx, &my);
+    float mouse_x = static_cast<float>(mx);
+    float mouse_y = static_cast<float>(my);
 
-        if (state.first_mouse) {
-            state.last_x = mouse_x;
-            state.last_y = mouse_y;
-            state.first_mouse = false;
-        }
-
-        float x_offset = mouse_x - state.last_x;
-        float y_offset = state.last_y - mouse_y;
+    if (state.first_mouse) {
         state.last_x = mouse_x;
         state.last_y = mouse_y;
+        state.first_mouse = false;
+    }
+
+    float x_offset = mouse_x - state.last_x;
+    float y_offset = state.last_y - mouse_y;
+
+    state.mouse_dx = x_offset;
+    state.mouse_dy = y_offset;
+
+    state.last_x = mouse_x;
+    state.last_y = mouse_y;
+
+    // 3. Process FPS Camera Logic (If enabled)
+    if (state.fps_camera_enabled) {
 
         state.yaw += x_offset * 0.1f;
         state.pitch += y_offset * 0.1f;
@@ -761,4 +821,12 @@ PYBIND11_MODULE(radiance3d, m) {
     m.def("set_physics_position", &set_physics_position);
     m.def("set_physics_rotation", &set_physics_rotation);
     m.def("set_physics_mass", &set_physics_mass);
+    m.def("apply_physics_force", &apply_physics_force, py::arg("collider"), py::arg("fx"), py::arg("fy"), py::arg("fz"), py::arg("rx") = 0.0f, py::arg("ry") = 0.0f, py::arg("rz") = 0.0f);
+    m.def("apply_physics_torque", &apply_physics_torque);
+    m.def("apply_physics_central_impulse", &apply_physics_central_impulse);
+    m.def("get_rotation", &get_rotation);
+    m.def("get_physics_position", &get_physics_position);
+    m.def("get_physics_rotation", &get_physics_rotation);
+    m.def("get_mouse_position", &get_mouse_position);
+    m.def("get_mouse_delta", &get_mouse_delta);
 }

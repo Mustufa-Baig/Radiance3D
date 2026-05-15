@@ -2,7 +2,7 @@ import radiance3d as r3d
 import time, math
 
 r3d.init_window(800, 600, "Radiance3D - Full PBR Materials")
-r3d.set_fps_camera(True)
+r3d.set_fps_camera(False)
 
 r3d.load_skybox("canary.hdr")
 
@@ -52,6 +52,21 @@ while r3d.is_running():
         r3d.set_physics_rotation(cc, math.radians(45), 0, math.radians(45))
         r3d.set_physics_position(cc, 0, 15, 0)
 
+    if r3d.get_key(ord('W')):
+        r3d.apply_physics_force(cube_collider,-50,0,0)
+    if r3d.get_key(ord('A')):
+        r3d.apply_physics_force(cube_collider,0,0,50)
+    if r3d.get_key(ord('S')):
+        r3d.apply_physics_force(cube_collider,50,0,0)
+    if r3d.get_key(ord('D')):
+        r3d.apply_physics_force(cube_collider,0,0,-50)
 
     r3d.step_physics()
+    
+    cube_pos=list(r3d.get_physics_position(cube_collider))
+    cube_pos[0]+=5
+    cube_pos[1]+=1
+
+    r3d.set_camera_position(*cube_pos)
+    
     r3d.render_frame()
