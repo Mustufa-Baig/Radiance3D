@@ -38,14 +38,7 @@ FetchContent_Declare(glfw
 )
 FetchContent_MakeAvailable(glfw)
 
-# ── Python ────────────────────────────────────
-# Development.Module is the minimal component needed for wheel builds (CI).
-# Plain Development is easier to locate in a full local Python install.
-if(IS_CI_BUILD)
-    find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
-else()
-    find_package(Python COMPONENTS Interpreter Development REQUIRED)
-endif()
+find_package(Python COMPONENTS Interpreter Development.Module REQUIRED)
 
 find_package(OpenGL REQUIRED)
 
